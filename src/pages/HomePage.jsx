@@ -51,9 +51,11 @@ class HomePage extends Component {
 		window.open(generateMidi(progression));
 	};
 
-	_generate = () => {
+	_generate = key => {
+		let generateKey = key || "C";
+		console.log(generateKey);
 		this._randomizeColor();
-		let progression = generateProgression();
+		let progression = generateProgression(generateKey);
 		this.setState({
 			progression
 		});
@@ -77,7 +79,7 @@ class HomePage extends Component {
 					) : (
 						<button
 							className="text-5xl text-grey-lightest hover:text-white text-shadow transition"
-							onClick={this._generate}
+							onClick={() => this._generate()}
 						>
 							generate
 						</button>

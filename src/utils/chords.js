@@ -3,10 +3,10 @@ import teoria from "teoria";
 import * as MidiWriter from "midi-writer-js";
 const VOICING_THRESHOLD = 5;
 
-export const generateProgression = () => {
+export const generateProgression = key => {
 	let progression = [];
 	let chords = Chord.names();
-	let scale = Scale.notes("C major");
+	let scale = Scale.notes(key + " major");
 
 	for (let i = 0; i < 4; i++) {
 		let chordIndex = Math.floor(Math.random() * chords.length);

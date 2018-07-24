@@ -46,6 +46,14 @@ class Progression extends Component {
 		return;
 	};
 
+	_generate = () => {
+		this.setState({
+			key: this.state.key,
+			previousKey: this.state.key
+		});
+		this.props.generate(this.state.key);
+	};
+
 	_listen = () => {
 		if (this.state.playing) {
 			this._cleanup();
@@ -178,10 +186,7 @@ class Progression extends Component {
 					>
 						{!this.state.playing ? "listen?" : "stop"}
 					</button>
-					<button
-						className="btn btn-ghost transition"
-						onClick={this.props.generate}
-					>
+					<button className="btn btn-ghost transition" onClick={this._generate}>
 						regenerate
 					</button>
 				</div>

@@ -1,0 +1,139 @@
+/* eslint-disable */
+@tailwind preflight;
+@tailwind utilities;
+@tailwind components;
+/* Your custom CSS here */
+
+html,
+body,
+#root {
+	height: 100%;
+	box-sizing: border-box;
+}
+
+.btn {
+	@apply py-2 px-4 rounded;
+}
+
+.btn-ghost {
+	@apply text-grey-dark;
+}
+
+.btn-ghost:hover {
+	@apply text-grey-darker bg-grey-lighter;
+}
+
+button:disabled,
+input:disabled,
+select:disabled,
+option:disabled {
+	@apply opacity-50 cursor-not-allowed;
+}
+
+button:focus,
+input:focus,
+select:focus,
+option:focus {
+	@apply outline-none;
+}
+
+.toggle input[type="checkbox"] {
+	@apply hidden;
+}
+
+.toggle label.toggle-label {
+	@apply p-1 rounded-full block w-12 h-6 relative cursor-pointer outline-none;
+}
+
+.toggle label.toggle-label:after {
+	@apply rounded-full bg-white relative block w-1/2 h-full;
+	content: "";
+	transition: all 0.2s ease;
+	left: 0;
+}
+
+.toggle input + label.toggle-label {
+	@apply bg-grey-light;
+	transition: all 0.2s ease;
+}
+
+.toggle input:checked + label.toggle-label {
+	@apply bg-success;
+	transition: all 0.2s ease;
+}
+
+.toggle input:checked + label.toggle-label:after {
+	left: 50%;
+}
+
+select option {
+	@apply my-2 bg-grey-lighter text-grey-dark;
+}
+
+.loader {
+	@apply z-10;
+	top: calc(50% - 1rem);
+	left: calc(50% - 2rem);
+}
+
+.loader + * {
+	filter: blur(3px);
+	transition: all 0.2s ease;
+}
+
+.text-shadow {
+	text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.1);
+}
+
+.cube1,
+.cube2 {
+	top: 0;
+	left: 0;
+	-webkit-animation: sk-cubemove 1.8s infinite ease-in-out;
+	animation: sk-cubemove 1.8s infinite ease-in-out;
+}
+
+.cube2 {
+	-webkit-animation-delay: -0.9s;
+	animation-delay: -0.9s;
+}
+
+@-webkit-keyframes sk-cubemove {
+	25% {
+		-webkit-transform: translateX(42px) rotate(-90deg) scale(0.5);
+	}
+	50% {
+		-webkit-transform: translateX(42px) translateY(42px) rotate(-180deg);
+	}
+	75% {
+		-webkit-transform: translateX(0px) translateY(42px) rotate(-270deg)
+			scale(0.5);
+	}
+	100% {
+		-webkit-transform: rotate(-360deg);
+	}
+}
+
+@keyframes sk-cubemove {
+	25% {
+		transform: translateX(42px) rotate(-90deg) scale(0.5);
+		-webkit-transform: translateX(42px) rotate(-90deg) scale(0.5);
+	}
+	50% {
+		transform: translateX(42px) translateY(42px) rotate(-179deg);
+		-webkit-transform: translateX(42px) translateY(42px) rotate(-179deg);
+	}
+	50.1% {
+		transform: translateX(42px) translateY(42px) rotate(-180deg);
+		-webkit-transform: translateX(42px) translateY(42px) rotate(-180deg);
+	}
+	75% {
+		transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5);
+		-webkit-transform: translateX(0px) translateY(42px) rotate(-270deg)
+			scale(0.5);
+	}
+	100% {
+		transform: rotate(-360deg);
+		-webkit-transform: rotate(-360deg);
+	}
+}

@@ -6,9 +6,9 @@ import HomePage from "./pages/HomePage";
 class App extends Component {
 	render() {
 		return (
-			<Router>
+			<Router basename={process.env.PUBLIC_URL}>
 				<Switch>
-					<BaseRoute exact path="/" component={HomePage} />
+					<BaseRoute path="/" component={HomePage} />
 				</Switch>
 			</Router>
 		);

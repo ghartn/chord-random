@@ -1,24 +1,15 @@
 import React, { Component } from "react";
-import { generateProgression, generateMidi } from "../utils/chords";
-import Progression from "../components/Progression";
+import {
+	generateProgression,
+	generateMidi,
+	mapProgressionToKey,
+	getChordNotes
+} from "../utils/chords";
 import Loader from "../components/Loader";
-
-const COLORS = [
-	"greenblue",
-	"cyan",
-	"sky",
-	"violet",
-	"mint",
-	"seablue",
-	"blue",
-	"purple",
-	"peach",
-	"pink",
-	"yellow",
-	"orange",
-	"red",
-	"magenta"
-];
+import ChordDisplay from "../components/ChordDisplay";
+import KEYS from "../utils/keys";
+import COLORS from "../utils/colors";
+import Tone from "tone";
 
 class HomePage extends Component {
 	constructor() {
@@ -26,7 +17,13 @@ class HomePage extends Component {
 		this.state = {
 			loading: false,
 			color: "grey-darkest",
-			progression: []
+			progression: [],
+			previousKey: "C",
+			key: "C",
+			bpm: 120,
+			playing: false,
+			chordPart: null,
+			stopEvent: null
 		};
 	}
 
@@ -46,19 +43,184 @@ class HomePage extends Component {
 		});
 	};
 
-	_downloadMidi = progression => {
+	_downloadMidi = () => {
 		this._randomizeColor();
-		window.open(generateMidi(progression));
+		let progessionInKey = mapProgressionToKey(
+			this.state.progression,
+			this.state.previousKey,
+			this.state.key
+		);
+		let chordNotes = getChordNotes(progessionInKey);
+		window.open(generateMidi(chordNotes));
 	};
 
-	_generate = key => {
-		let generateKey = key || "C";
-		console.log(generateKey);
+	_onKeyChange = e => {
+		this.setState({
+			previousKey: this.state.key,
+			key: e.target.value
+		});
+	};
+
+	_toggleChordLock = chord => {
+		let chords = [...this.state.progression];
+		let lockedChord = chords.find(element => chord === element);
+		if (lockedChord) lockedChord.lock = !lockedChord.lock;
+		this.setState({
+			progression: chords
+		});
+	};
+
+	_cleanup = () => {
+		if (this.state.chordPart) {
+			this.state.chordPart.dispose();
+		}
+		if (this.state.stopEvent) {
+			this.state.stopEvent.dispose();
+		}
+		Tone.Master.mute = true;
+		Tone.Transport.stop();
+		Tone.Transport.cancel(0);
+		this.setState({
+			playing: false,
+			chordPart: null,
+			stopEvent: null
+		});
+		return;
+	};
+
+	_generate = () => {
+		this.setState({
+			key: this.state.key,
+			previousKey: this.state.key
+		});
+		this._cleanup();
 		this._randomizeColor();
-		let progression = generateProgression(generateKey);
+		let progression = generateProgression(
+			this.state.key,
+			this.state.progression
+		);
 		this.setState({
 			progression
 		});
+	};
+
+	_listen = () => {
+		if (this.state.playing) {
+			this._cleanup();
+			return;
+		}
+
+		let key = this.state.key;
+		let progessionInKey = mapProgressionToKey(
+			this.state.progression,
+			this.state.previousKey,
+			this.state.key
+		);
+		let chordNotes = getChordNotes(progessionInKey);
+		let polySynth = new Tone.PolySynth(6, Tone.Synth).toMaster();
+		polySynth.set({
+			"oscillator.type": "triangle",
+			volume: -16,
+			portamento: 0.1,
+			envelope: {
+				attack: 0.1,
+				decay: 1.2,
+				sustain: 0,
+				release: 0.8
+			}
+		});
+
+		Tone.Master.mute = false;
+		Tone.Transport.bpm.value = this.state.bpm;
+
+		let chords = [];
+		let endTime = "";
+		for (let index in chordNotes) {
+			let chord = chordNotes[index];
+			let time = `${Number(index)}${Number(index) !== 0 ? "m" : ""}`;
+			chords.push([time, chord]);
+			endTime = `${Number(index) + 1}m`;
+		}
+
+		let chordPart = new Tone.Part((time, chord) => {
+			polySynth.triggerAttackRelease(chord, "1m", time);
+		}, chords).start(0);
+
+		let stopEvent = new Tone.Event((time, x) => {
+			this._cleanup();
+		}).start(endTime);
+
+		Tone.Transport.stop();
+		Tone.Transport.start("+0.1");
+
+		this.setState({
+			playing: true,
+			chordPart,
+			stopEvent
+		});
+	};
+
+	_renderChords = progression => {
+		let progressionDisplay = progression.map((chord, index) => (
+			<ChordDisplay
+				key={index}
+				chord={chord}
+				toggleLock={this._toggleChordLock}
+			/>
+		));
+		return (
+			<span className="flex flex-col md:flex-row flex-wrap transition">
+				{progressionDisplay}
+			</span>
+		);
+	};
+
+	_renderProgression = () => {
+		const progressionDisplay = this._renderChords(
+			mapProgressionToKey(
+				this.state.progression,
+				this.state.previousKey,
+				this.state.key
+			)
+		);
+		return (
+			<div className="flex flex-col text-center p-4 md:p-12 shadow-lg bg-white rounded m-2">
+				<div className="self-start text-left mb-6 bg-grey-lighter rounded w-full">
+					{progressionDisplay}
+				</div>
+				<div className="flex justify-between items-center mb-6">
+					<select
+						name="key"
+						className="rounded bg-grey-lighter leading-none text-secondary p-2"
+						value={this.state.key}
+						onChange={this._onKeyChange}
+					>
+						{KEYS.map((key, index) => (
+							<option key={index} value={key.value}>
+								{key.label}
+							</option>
+						))}
+					</select>
+					<span
+						className="text-grey-dark hover:text-grey cursor-pointer transition"
+						onClick={this._downloadMidi}
+					>
+						download midi
+					</span>
+				</div>
+				<div className="flex justify-end">
+					<button
+						className={`btn bg-${this.state.color} text-white transition mr-4`}
+						onClick={this._listen}
+					>
+						{!this.state.playing ? "listen?" : "stop"}
+					</button>
+					<button className="btn btn-ghost transition" onClick={this._generate}>
+						regenerate
+					</button>
+				</div>
+			</div>
+		);
 	};
 
 	render() {
@@ -70,12 +232,7 @@ class HomePage extends Component {
 				<div className="flex flex-col container mx-auto">
 					<Loader loading={this.state.loading} color={color} />
 					{this.state.progression.length > 0 ? (
-						<Progression
-							color={color}
-							progression={this.state.progression}
-							generate={this._generate}
-							downloadMidi={this._downloadMidi}
-						/>
+						this._renderProgression()
 					) : (
 						<button
 							className="text-5xl text-grey-lightest hover:text-white text-shadow transition"

@@ -1,33 +1,43 @@
 import { Chord, Scale, Distance, Note } from "tonal";
+import COLORS from "./colors";
 import teoria from "teoria";
 import * as MidiWriter from "midi-writer-js";
 const VOICING_THRESHOLD = 5;
 
-export const generateProgression = key => {
-	let progression = [];
-	let chords = Chord.names();
-	let scale = Scale.notes(key + " major");
+export const generateProgression = (key, oldProgresion) => {
+	let progression = [...oldProgresion];
 
-	for (let i = 0; i < 4; i++) {
-		let chordIndex = Math.floor(Math.random() * chords.length);
-		let scaleIndex = Math.floor(Math.random() * scale.length);
-		progression.push({
-			root: scale[scaleIndex],
-			type: chords[chordIndex],
-			display: scale[scaleIndex] + chords[chordIndex]
+	//check for locked chords
+	if (progression && progression.length > 0) {
+		progression.forEach((chord, index) => {
+			if (chord.lock) {
+				progression[index] = chord;
+			} else {
+				progression[index] = generateChord(key);
+			}
 		});
+	} else {
+		for (let i = 0; i < 4; i++) {
+			progression.push(generateChord(key));
+		}
 	}
+
 	return progression;
 };
 
-export const progressionToString = progression => {
-	let stringified = "";
-	for (let i in progression) {
-		let chord = progression[i];
-		stringified += chord.display;
-		stringified += Number(i) + 1 !== progression.length ? " - " : "";
-	}
-	return stringified.trim();
+const generateChord = key => {
+	let chords = Chord.names();
+	let scale = Scale.notes(key + " major");
+	let chordIndex = Math.floor(Math.random() * chords.length);
+	let scaleIndex = Math.floor(Math.random() * scale.length);
+	let colorIndex = Math.floor(Math.random() * COLORS.length);
+	return {
+		root: scale[scaleIndex],
+		type: chords[chordIndex],
+		name: scale[scaleIndex] + chords[chordIndex],
+		lock: false,
+		color: COLORS[colorIndex]
+	};
 };
 
 export const mapProgressionToKey = (progression, oldKey, newKey) => {

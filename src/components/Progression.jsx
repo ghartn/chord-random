@@ -51,6 +51,7 @@ class Progression extends Component {
 			key: this.state.key,
 			previousKey: this.state.key
 		});
+		this._cleanup();
 		this.props.generate(this.state.key);
 	};
 
@@ -115,7 +116,7 @@ class Progression extends Component {
 			let root = chord.root;
 			let type = chord.type.split("");
 			return (
-				<span key={index} className="flex-1 mr-4 tracking-wide">
+				<span key={index} className="block md:inline md:flex-1 mr-4 tracking-wide">
 					<span className={`text-3xl text-${this.props.color}`}>{root}</span>
 					<span className="text-grey-dark text-lg">
 						{type.map((value, index) => {
@@ -131,7 +132,7 @@ class Progression extends Component {
 			);
 		});
 		return (
-			<span className="flex flex-row mb-2 transition">
+			<span className="flex flex-row flex-wrap mb-2 transition">
 				{progressionDisplay}
 			</span>
 		);
@@ -147,8 +148,8 @@ class Progression extends Component {
 		);
 
 		return (
-			<div className="flex flex-col text-center p-12 shadow-lg bg-white rounded">
-				<div className="self-start text-left py-8 px-10 mb-6 bg-grey-lighter rounded">
+			<div className="flex flex-col text-center p-4 md:p-12 shadow-lg bg-white rounded m-2">
+				<div className="self-start text-left py-8 px-10 mb-6 bg-grey-lighter rounded max-w-full">
 					{progressionDisplay}
 					<span
 						className="text-grey-dark hover:text-grey cursor-pointer transition"

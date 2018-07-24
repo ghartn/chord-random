@@ -65,9 +65,9 @@ class HomePage extends Component {
 		const { color } = this.state;
 		return (
 			<div
-				className={`flex flex-1 items-center justify-center mx-auto w-full bg-${color} transition`}
+				className={`flex flex-1 items-center justify-center  w-full bg-${color} transition`}
 			>
-				<div className="flex flex-col container">
+				<div className="flex flex-col container mx-auto">
 					<Loader loading={this.state.loading} color={color} />
 					{this.state.progression.length > 0 ? (
 						<Progression

@@ -7,6 +7,7 @@
 		"autoprefixer": "^9.0.0",
 		"axios": "^0.18.0",
 		"glhd-tailwindcss-transitions": "^0.3.0",
+		"lodash": "^4.17.10",
 		"midi-writer-js": "^1.5.2",
 		"postcss-cli": "^5.0.1",
 		"react": "^16.4.1",

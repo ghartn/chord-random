@@ -16,8 +16,9 @@ const ChordDisplay = ({ chord, toggleLock }) => {
 					{type.map((value, index) => {
 						//if 'flat' symbol
 						if (value === "b") return <sub key={index}>{value}</sub>;
-						//if number -> superscript
-						else if (!isNaN(value)) return <sup key={index}>{value}</sup>;
+						//if number or sharp
+						else if (!isNaN(value) || value === "#")
+							return <sup key={index}>{value}</sup>;
 						//else, boring
 						else return value;
 					})}

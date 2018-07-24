@@ -2,6 +2,7 @@ import { Chord, Scale, Distance, Note } from "tonal";
 import COLORS from "./colors";
 import teoria from "teoria";
 import * as MidiWriter from "midi-writer-js";
+
 const VOICING_THRESHOLD = 5;
 
 export const generateProgression = (key, oldProgresion) => {
@@ -48,7 +49,9 @@ export const mapProgressionToKey = (progression, oldKey, newKey) => {
 		let newChord = { ...chord };
 		let interval = Distance.interval(oldKey, newKey);
 		newChord.root = Distance.transpose(chord.root, interval);
-		newChord.display = newChord.root + newChord.type;
+		newChord.name = newChord.root + newChord.type;
+		newChord.lock = chord.lock;
+		newChord.color = chord.color;
 		cleanedProgression.push(newChord);
 	});
 	return cleanedProgression;
@@ -58,10 +61,10 @@ export const getChordNotes = progression => {
 	let noteArray = [];
 	for (let currentChord of progression) {
 		let chordNotes = [];
-		chordNotes = Chord.exists(currentChord.display)
-			? Chord.notes(currentChord.display)
+		chordNotes = Chord.exists(currentChord.name)
+			? Chord.notes(currentChord.name)
 			: teoria
-					.chord(currentChord.display)
+					.chord(currentChord.name)
 					.notes()
 					.map(note =>
 						note

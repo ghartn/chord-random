@@ -9,6 +9,7 @@ import Loader from "../components/Loader";
 import ChordDisplay from "../components/ChordDisplay";
 import KEYS from "../utils/keys";
 import COLORS from "../utils/colors";
+import isEqual from "lodash/isEqual";
 import Tone from "tone";
 
 class HomePage extends Component {
@@ -45,25 +46,31 @@ class HomePage extends Component {
 
 	_downloadMidi = () => {
 		this._randomizeColor();
-		let progessionInKey = mapProgressionToKey(
-			this.state.progression,
-			this.state.previousKey,
-			this.state.key
-		);
+		let progessionInKey = [...this.state.progression];
 		let chordNotes = getChordNotes(progessionInKey);
 		window.open(generateMidi(chordNotes));
 	};
 
 	_onKeyChange = e => {
+		let previousKey = this.state.key;
+		let key = e.target.value;
+		let progression = mapProgressionToKey(
+			[...this.state.progression],
+			previousKey,
+			key
+		);
 		this.setState({
-			previousKey: this.state.key,
-			key: e.target.value
+			progression,
+			previousKey,
+			key
 		});
 	};
 
 	_toggleChordLock = chord => {
 		let chords = [...this.state.progression];
-		let lockedChord = chords.find(element => chord === element);
+		let lockedChord = chords.find(element => {
+			return isEqual(chord, element);
+		});
 		if (lockedChord) lockedChord.lock = !lockedChord.lock;
 		this.setState({
 			progression: chords
@@ -110,12 +117,7 @@ class HomePage extends Component {
 			return;
 		}
 
-		let key = this.state.key;
-		let progessionInKey = mapProgressionToKey(
-			this.state.progression,
-			this.state.previousKey,
-			this.state.key
-		);
+		let progessionInKey = [...this.state.progression];
 		let chordNotes = getChordNotes(progessionInKey);
 		let polySynth = new Tone.PolySynth(6, Tone.Synth).toMaster();
 		polySynth.set({
@@ -176,13 +178,7 @@ class HomePage extends Component {
 	};
 
 	_renderProgression = () => {
-		const progressionDisplay = this._renderChords(
-			mapProgressionToKey(
-				this.state.progression,
-				this.state.previousKey,
-				this.state.key
-			)
-		);
+		const progressionDisplay = this._renderChords(this.state.progression);
 		return (
 			<div className="flex flex-col text-center p-4 md:p-12 shadow-lg bg-white rounded m-2">
 				<div className="self-start text-left mb-6 bg-grey-lighter rounded w-full">

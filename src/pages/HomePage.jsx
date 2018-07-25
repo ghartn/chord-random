@@ -47,6 +47,7 @@ class HomePage extends Component {
 	_downloadMidi = () => {
 		let progessionInKey = [...this.state.progression];
 		let chordNotes = getChordNotes(progessionInKey);
+		console.log(chordNotes);
 		return generateMidi(chordNotes);
 	};
 
@@ -199,7 +200,7 @@ class HomePage extends Component {
 					<a
 						className="no-underline text-grey-dark hover:text-grey cursor-pointer transition"
 						href={this._downloadMidi()}
-						download
+						//download
 					>
 						download midi
 					</a>

@@ -45,10 +45,9 @@ class HomePage extends Component {
 	};
 
 	_downloadMidi = () => {
-		this._randomizeColor();
 		let progessionInKey = [...this.state.progression];
 		let chordNotes = getChordNotes(progessionInKey);
-		window.open(generateMidi(chordNotes));
+		return generateMidi(chordNotes);
 	};
 
 	_onKeyChange = e => {
@@ -197,12 +196,13 @@ class HomePage extends Component {
 							</option>
 						))}
 					</select>
-					<span
-						className="text-grey-dark hover:text-grey cursor-pointer transition"
-						onClick={this._downloadMidi}
+					<a
+						className="no-underline text-grey-dark hover:text-grey cursor-pointer transition"
+						href={this._downloadMidi()}
+						download
 					>
 						download midi
-					</span>
+					</a>
 				</div>
 				<div className="flex justify-end">
 					<button

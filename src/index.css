@@ -757,10 +757,6 @@ table {
   background-color: #eb3b5a;
 }
 
-.bg-taxi {
-  background-color: #f7b731;
-}
-
 .bg-lightpurple {
   background-color: #a55eea;
 }
@@ -791,6 +787,10 @@ table {
 
 .bg-mandarin {
   background-color: #fd9644;
+}
+
+.bg-watermelon {
+  background-color: #ff6b81;
 }
 
 .hover\:bg-transparent:hover {
@@ -901,10 +901,6 @@ table {
   background-color: #eb3b5a;
 }
 
-.hover\:bg-taxi:hover {
-  background-color: #f7b731;
-}
-
 .hover\:bg-lightpurple:hover {
   background-color: #a55eea;
 }
@@ -935,6 +931,10 @@ table {
 
 .hover\:bg-mandarin:hover {
   background-color: #fd9644;
+}
+
+.hover\:bg-watermelon:hover {
+  background-color: #ff6b81;
 }
 
 .focus\:bg-transparent:focus {
@@ -1045,10 +1045,6 @@ table {
   background-color: #eb3b5a;
 }
 
-.focus\:bg-taxi:focus {
-  background-color: #f7b731;
-}
-
 .focus\:bg-lightpurple:focus {
   background-color: #a55eea;
 }
@@ -1079,6 +1075,10 @@ table {
 
 .focus\:bg-mandarin:focus {
   background-color: #fd9644;
+}
+
+.focus\:bg-watermelon:focus {
+  background-color: #ff6b81;
 }
 
 .bg-bottom {
@@ -1261,10 +1261,6 @@ table {
   border-color: #eb3b5a;
 }
 
-.border-taxi {
-  border-color: #f7b731;
-}
-
 .border-lightpurple {
   border-color: #a55eea;
 }
@@ -1295,6 +1291,10 @@ table {
 
 .border-mandarin {
   border-color: #fd9644;
+}
+
+.border-watermelon {
+  border-color: #ff6b81;
 }
 
 .hover\:border-transparent:hover {
@@ -1405,10 +1405,6 @@ table {
   border-color: #eb3b5a;
 }
 
-.hover\:border-taxi:hover {
-  border-color: #f7b731;
-}
-
 .hover\:border-lightpurple:hover {
   border-color: #a55eea;
 }
@@ -1439,6 +1435,10 @@ table {
 
 .hover\:border-mandarin:hover {
   border-color: #fd9644;
+}
+
+.hover\:border-watermelon:hover {
+  border-color: #ff6b81;
 }
 
 .focus\:border-transparent:focus {
@@ -1549,10 +1549,6 @@ table {
   border-color: #eb3b5a;
 }
 
-.focus\:border-taxi:focus {
-  border-color: #f7b731;
-}
-
 .focus\:border-lightpurple:focus {
   border-color: #a55eea;
 }
@@ -1583,6 +1579,10 @@ table {
 
 .focus\:border-mandarin:focus {
   border-color: #fd9644;
+}
+
+.focus\:border-watermelon:focus {
+  border-color: #ff6b81;
 }
 
 .rounded-none {
@@ -4148,10 +4148,6 @@ table {
   color: #eb3b5a;
 }
 
-.text-taxi {
-  color: #f7b731;
-}
-
 .text-lightpurple {
   color: #a55eea;
 }
@@ -4182,6 +4178,10 @@ table {
 
 .text-mandarin {
   color: #fd9644;
+}
+
+.text-watermelon {
+  color: #ff6b81;
 }
 
 .hover\:text-transparent:hover {
@@ -4292,10 +4292,6 @@ table {
   color: #eb3b5a;
 }
 
-.hover\:text-taxi:hover {
-  color: #f7b731;
-}
-
 .hover\:text-lightpurple:hover {
   color: #a55eea;
 }
@@ -4326,6 +4322,10 @@ table {
 
 .hover\:text-mandarin:hover {
   color: #fd9644;
+}
+
+.hover\:text-watermelon:hover {
+  color: #ff6b81;
 }
 
 .focus\:text-transparent:focus {
@@ -4436,10 +4436,6 @@ table {
   color: #eb3b5a;
 }
 
-.focus\:text-taxi:focus {
-  color: #f7b731;
-}
-
 .focus\:text-lightpurple:focus {
   color: #a55eea;
 }
@@ -4470,6 +4466,10 @@ table {
 
 .focus\:text-mandarin:focus {
   color: #fd9644;
+}
+
+.focus\:text-watermelon:focus {
+  color: #ff6b81;
 }
 
 .text-xs {
@@ -5301,10 +5301,6 @@ svg.text-shadow-sm,
     background-color: #eb3b5a;
   }
 
-  .sm\:bg-taxi {
-    background-color: #f7b731;
-  }
-
   .sm\:bg-lightpurple {
     background-color: #a55eea;
   }
@@ -5335,6 +5331,10 @@ svg.text-shadow-sm,
 
   .sm\:bg-mandarin {
     background-color: #fd9644;
+  }
+
+  .sm\:bg-watermelon {
+    background-color: #ff6b81;
   }
 
   .sm\:hover\:bg-transparent:hover {
@@ -5445,10 +5445,6 @@ svg.text-shadow-sm,
     background-color: #eb3b5a;
   }
 
-  .sm\:hover\:bg-taxi:hover {
-    background-color: #f7b731;
-  }
-
   .sm\:hover\:bg-lightpurple:hover {
     background-color: #a55eea;
   }
@@ -5479,6 +5475,10 @@ svg.text-shadow-sm,
 
   .sm\:hover\:bg-mandarin:hover {
     background-color: #fd9644;
+  }
+
+  .sm\:hover\:bg-watermelon:hover {
+    background-color: #ff6b81;
   }
 
   .sm\:focus\:bg-transparent:focus {
@@ -5589,10 +5589,6 @@ svg.text-shadow-sm,
     background-color: #eb3b5a;
   }
 
-  .sm\:focus\:bg-taxi:focus {
-    background-color: #f7b731;
-  }
-
   .sm\:focus\:bg-lightpurple:focus {
     background-color: #a55eea;
   }
@@ -5623,6 +5619,10 @@ svg.text-shadow-sm,
 
   .sm\:focus\:bg-mandarin:focus {
     background-color: #fd9644;
+  }
+
+  .sm\:focus\:bg-watermelon:focus {
+    background-color: #ff6b81;
   }
 
   .sm\:bg-bottom {
@@ -5797,10 +5797,6 @@ svg.text-shadow-sm,
     border-color: #eb3b5a;
   }
 
-  .sm\:border-taxi {
-    border-color: #f7b731;
-  }
-
   .sm\:border-lightpurple {
     border-color: #a55eea;
   }
@@ -5831,6 +5827,10 @@ svg.text-shadow-sm,
 
   .sm\:border-mandarin {
     border-color: #fd9644;
+  }
+
+  .sm\:border-watermelon {
+    border-color: #ff6b81;
   }
 
   .sm\:hover\:border-transparent:hover {
@@ -5941,10 +5941,6 @@ svg.text-shadow-sm,
     border-color: #eb3b5a;
   }
 
-  .sm\:hover\:border-taxi:hover {
-    border-color: #f7b731;
-  }
-
   .sm\:hover\:border-lightpurple:hover {
     border-color: #a55eea;
   }
@@ -5975,6 +5971,10 @@ svg.text-shadow-sm,
 
   .sm\:hover\:border-mandarin:hover {
     border-color: #fd9644;
+  }
+
+  .sm\:hover\:border-watermelon:hover {
+    border-color: #ff6b81;
   }
 
   .sm\:focus\:border-transparent:focus {
@@ -6085,10 +6085,6 @@ svg.text-shadow-sm,
     border-color: #eb3b5a;
   }
 
-  .sm\:focus\:border-taxi:focus {
-    border-color: #f7b731;
-  }
-
   .sm\:focus\:border-lightpurple:focus {
     border-color: #a55eea;
   }
@@ -6119,6 +6115,10 @@ svg.text-shadow-sm,
 
   .sm\:focus\:border-mandarin:focus {
     border-color: #fd9644;
+  }
+
+  .sm\:focus\:border-watermelon:focus {
+    border-color: #ff6b81;
   }
 
   .sm\:rounded-none {
@@ -8668,10 +8668,6 @@ svg.text-shadow-sm,
     color: #eb3b5a;
   }
 
-  .sm\:text-taxi {
-    color: #f7b731;
-  }
-
   .sm\:text-lightpurple {
     color: #a55eea;
   }
@@ -8702,6 +8698,10 @@ svg.text-shadow-sm,
 
   .sm\:text-mandarin {
     color: #fd9644;
+  }
+
+  .sm\:text-watermelon {
+    color: #ff6b81;
   }
 
   .sm\:hover\:text-transparent:hover {
@@ -8812,10 +8812,6 @@ svg.text-shadow-sm,
     color: #eb3b5a;
   }
 
-  .sm\:hover\:text-taxi:hover {
-    color: #f7b731;
-  }
-
   .sm\:hover\:text-lightpurple:hover {
     color: #a55eea;
   }
@@ -8846,6 +8842,10 @@ svg.text-shadow-sm,
 
   .sm\:hover\:text-mandarin:hover {
     color: #fd9644;
+  }
+
+  .sm\:hover\:text-watermelon:hover {
+    color: #ff6b81;
   }
 
   .sm\:focus\:text-transparent:focus {
@@ -8956,10 +8956,6 @@ svg.text-shadow-sm,
     color: #eb3b5a;
   }
 
-  .sm\:focus\:text-taxi:focus {
-    color: #f7b731;
-  }
-
   .sm\:focus\:text-lightpurple:focus {
     color: #a55eea;
   }
@@ -8990,6 +8986,10 @@ svg.text-shadow-sm,
 
   .sm\:focus\:text-mandarin:focus {
     color: #fd9644;
+  }
+
+  .sm\:focus\:text-watermelon:focus {
+    color: #ff6b81;
   }
 
   .sm\:text-xs {
@@ -9535,10 +9535,6 @@ svg.text-shadow-sm,
     background-color: #eb3b5a;
   }
 
-  .md\:bg-taxi {
-    background-color: #f7b731;
-  }
-
   .md\:bg-lightpurple {
     background-color: #a55eea;
   }
@@ -9569,6 +9565,10 @@ svg.text-shadow-sm,
 
   .md\:bg-mandarin {
     background-color: #fd9644;
+  }
+
+  .md\:bg-watermelon {
+    background-color: #ff6b81;
   }
 
   .md\:hover\:bg-transparent:hover {
@@ -9679,10 +9679,6 @@ svg.text-shadow-sm,
     background-color: #eb3b5a;
   }
 
-  .md\:hover\:bg-taxi:hover {
-    background-color: #f7b731;
-  }
-
   .md\:hover\:bg-lightpurple:hover {
     background-color: #a55eea;
   }
@@ -9713,6 +9709,10 @@ svg.text-shadow-sm,
 
   .md\:hover\:bg-mandarin:hover {
     background-color: #fd9644;
+  }
+
+  .md\:hover\:bg-watermelon:hover {
+    background-color: #ff6b81;
   }
 
   .md\:focus\:bg-transparent:focus {
@@ -9823,10 +9823,6 @@ svg.text-shadow-sm,
     background-color: #eb3b5a;
   }
 
-  .md\:focus\:bg-taxi:focus {
-    background-color: #f7b731;
-  }
-
   .md\:focus\:bg-lightpurple:focus {
     background-color: #a55eea;
   }
@@ -9857,6 +9853,10 @@ svg.text-shadow-sm,
 
   .md\:focus\:bg-mandarin:focus {
     background-color: #fd9644;
+  }
+
+  .md\:focus\:bg-watermelon:focus {
+    background-color: #ff6b81;
   }
 
   .md\:bg-bottom {
@@ -10031,10 +10031,6 @@ svg.text-shadow-sm,
     border-color: #eb3b5a;
   }
 
-  .md\:border-taxi {
-    border-color: #f7b731;
-  }
-
   .md\:border-lightpurple {
     border-color: #a55eea;
   }
@@ -10065,6 +10061,10 @@ svg.text-shadow-sm,
 
   .md\:border-mandarin {
     border-color: #fd9644;
+  }
+
+  .md\:border-watermelon {
+    border-color: #ff6b81;
   }
 
   .md\:hover\:border-transparent:hover {
@@ -10175,10 +10175,6 @@ svg.text-shadow-sm,
     border-color: #eb3b5a;
   }
 
-  .md\:hover\:border-taxi:hover {
-    border-color: #f7b731;
-  }
-
   .md\:hover\:border-lightpurple:hover {
     border-color: #a55eea;
   }
@@ -10209,6 +10205,10 @@ svg.text-shadow-sm,
 
   .md\:hover\:border-mandarin:hover {
     border-color: #fd9644;
+  }
+
+  .md\:hover\:border-watermelon:hover {
+    border-color: #ff6b81;
   }
 
   .md\:focus\:border-transparent:focus {
@@ -10319,10 +10319,6 @@ svg.text-shadow-sm,
     border-color: #eb3b5a;
   }
 
-  .md\:focus\:border-taxi:focus {
-    border-color: #f7b731;
-  }
-
   .md\:focus\:border-lightpurple:focus {
     border-color: #a55eea;
   }
@@ -10353,6 +10349,10 @@ svg.text-shadow-sm,
 
   .md\:focus\:border-mandarin:focus {
     border-color: #fd9644;
+  }
+
+  .md\:focus\:border-watermelon:focus {
+    border-color: #ff6b81;
   }
 
   .md\:rounded-none {
@@ -12902,10 +12902,6 @@ svg.text-shadow-sm,
     color: #eb3b5a;
   }
 
-  .md\:text-taxi {
-    color: #f7b731;
-  }
-
   .md\:text-lightpurple {
     color: #a55eea;
   }
@@ -12936,6 +12932,10 @@ svg.text-shadow-sm,
 
   .md\:text-mandarin {
     color: #fd9644;
+  }
+
+  .md\:text-watermelon {
+    color: #ff6b81;
   }
 
   .md\:hover\:text-transparent:hover {
@@ -13046,10 +13046,6 @@ svg.text-shadow-sm,
     color: #eb3b5a;
   }
 
-  .md\:hover\:text-taxi:hover {
-    color: #f7b731;
-  }
-
   .md\:hover\:text-lightpurple:hover {
     color: #a55eea;
   }
@@ -13080,6 +13076,10 @@ svg.text-shadow-sm,
 
   .md\:hover\:text-mandarin:hover {
     color: #fd9644;
+  }
+
+  .md\:hover\:text-watermelon:hover {
+    color: #ff6b81;
   }
 
   .md\:focus\:text-transparent:focus {
@@ -13190,10 +13190,6 @@ svg.text-shadow-sm,
     color: #eb3b5a;
   }
 
-  .md\:focus\:text-taxi:focus {
-    color: #f7b731;
-  }
-
   .md\:focus\:text-lightpurple:focus {
     color: #a55eea;
   }
@@ -13224,6 +13220,10 @@ svg.text-shadow-sm,
 
   .md\:focus\:text-mandarin:focus {
     color: #fd9644;
+  }
+
+  .md\:focus\:text-watermelon:focus {
+    color: #ff6b81;
   }
 
   .md\:text-xs {

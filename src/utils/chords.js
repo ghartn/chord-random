@@ -1,5 +1,4 @@
 import { Chord, Scale, Distance, Note } from "tonal";
-import shuffle from "lodash/shuffle"
 import palette from "./palette";
 import * as MidiWriter from "midi-writer-js";
 
@@ -44,6 +43,7 @@ const generateChord = key => {
 		root: scale[scaleIndex],
 		type: chords[chordIndex],
 		name: scale[scaleIndex] + chords[chordIndex],
+		notes: getChordNotes(scale[scaleIndex] + chords[chordIndex]),
 		lock: false,
 		playing: false,
 		color: colors[colorIndex]
@@ -66,52 +66,23 @@ export const mapProgressionToKey = (progression, oldKey, newKey) => {
 	return cleanedProgression;
 };
 
-export const getChordNotes = progression => {
-	let noteArray = [];
-	for (let currentChord of progression) {
-		let chordNotes = [];
-		chordNotes = Chord.notes(currentChord.name)
-		let chordVoicing = voiceChord(chordNotes);
-		noteArray.push(chordVoicing);
-	}
-	return noteArray;
+export const getChordNotes = chordName => {
+	let chordNotes = [];
+	chordNotes = Chord.notes(chordName)
+	return voiceChord(chordNotes);
 };
 
 const voiceChord = chordNotes => {
 	if (!chordNotes) return [];
 	let voicing = [];
-	for (var i in chordNotes) {
-		//TODO: sometimes append 4 or 2? bass notes? better inversions
-		let note = chordNotes[i];
-		note = Note.simplify(note);
-		if (i == 0) {
-			//bass note, we will duplicate it in lower octave
-			voicing.push(note + "2");
-			voicing.push(note + "3");
-		} else {
-			//this algorithm is bad and makes no sense
-			let voiced = false;
-			let octave = 3;
-			while (!voiced) {
-				let noteToTry = note + octave;
-				for (var j = 1; j < voicing.length; j++) {
-					//iterate through already voiced notes (bass note)
-					let noteVoiced = voicing[j];
-					let distance = Math.abs(
-						Number(Distance.semitones(noteVoiced, noteToTry))
-					);
-					if (distance < VOICING_THRESHOLD) {
-						//note voice is too close to note already voiced
-						break;
-					} else {
-						voiced = true;
-						voicing.push(noteToTry);
-						break;
-					}
-				}
-				octave++; //increase octave
-			}
-		}
+	let rootNote = chordNotes[0];
+	voicing.push(rootNote + "2");
+	let notes = chordNotes.slice(1);
+	let octaves = [3, 4]
+
+	for (let note of notes) {
+		let octave = octaves[Math.floor(Math.random() * octaves.length)];
+		voicing.push(Note.simplify(note) + octave);
 	}
 	return voicing;
 };

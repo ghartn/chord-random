@@ -2,8 +2,7 @@ import React, { Component } from "react";
 import {
     generateProgression,
     generateMidi,
-    mapProgressionToKey,
-    getChordNotes
+    mapProgressionToKey
 } from "../utils/chords";
 import Loader from "../components/Loader";
 import ChordDisplay from "../components/ChordDisplay";
@@ -46,9 +45,7 @@ class HomePage extends Component {
     };
 
     _downloadMidi = () => {
-        let progessionInKey = [...this.state.progression];
-        let chordNotes = getChordNotes(progessionInKey);
-        return generateMidi(chordNotes);
+        return generateMidi(this.state.progression);
     };
 
     _onKeyChange = e => {
@@ -88,7 +85,7 @@ class HomePage extends Component {
 
 
         if (playingChord.playing) {
-            let chordNotes = getChordNotes([chord]);
+            let chordNotes = chord.notes;
             let polySynth = new Tone.PolySynth(10, Tone.Synth).toMaster();
             polySynth.set({
                 "oscillator.type": "triangle",
@@ -186,7 +183,7 @@ class HomePage extends Component {
         }
 
         let progessionInKey = [...this.state.progression];
-        let chordNotes = getChordNotes(progessionInKey);
+        let chordNotes = progessionInKey.map(chord => chord.notes)
         let polySynth = new Tone.PolySynth(10, Tone.Synth).toMaster();
         polySynth.set({
             "oscillator.type": "triangle",

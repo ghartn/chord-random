@@ -47,7 +47,6 @@ class HomePage extends Component {
 	_downloadMidi = () => {
 		let progessionInKey = [...this.state.progression];
 		let chordNotes = getChordNotes(progessionInKey);
-		console.log(chordNotes);
 		return generateMidi(chordNotes);
 	};
 
@@ -263,7 +262,7 @@ class HomePage extends Component {
 						className={`btn bg-${this.state.color} text-white transition mr-4`}
 						onClick={this._listen}
 					>
-						{!this.state.playing ? "listen?" : "stop"}
+						{!this.state.playing ? "listen" : "stop"}
 					</button>
 					<button className="btn btn-ghost transition" onClick={this._generate}>
 						regenerate

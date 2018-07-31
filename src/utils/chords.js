@@ -98,7 +98,9 @@ const voiceChord = chordNotes => {
 				for (var j = 1; j < voicing.length; j++) {
 					//iterate through already voiced notes (bass note)
 					let noteVoiced = voicing[j];
-					let distance = Math.abs(Distance.semitones(noteVoiced, noteToTry));
+					let distance = Math.abs(
+						Number(Distance.semitones(noteVoiced, noteToTry))
+					);
 					if (distance < VOICING_THRESHOLD) {
 						//note voice is too close to note already voiced
 						break;
@@ -127,7 +129,7 @@ export const generateMidi = progression => {
 		track.addEvent(
 			new MidiWriter.NoteEvent({
 				pitch: chord,
-				duration: "8"
+				duration: "2"
 			})
 		);
 	}

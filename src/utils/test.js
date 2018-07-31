@@ -69,3 +69,5 @@ const voiceChord = chordNotes => {
 };
 
 console.log(getChordNotes(["Dm", "CMaj7", "F", "G"]));
+
+//TODO: check chord exists for every chord

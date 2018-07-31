@@ -15,7 +15,6 @@ let palette = {
     magenta: "#e84393",
     redorange: "#fc5c65",
     deepred: "#eb3b5a",
-    taxi: "#f7b731",
     lightpurple: "#a55eea",
     darkpurple: "#8854d0",
     boyblue: "#2d98da",
@@ -23,7 +22,8 @@ let palette = {
     green: "#20bf6b",
     turqoise: "#0fb9b1",
     bronze: "#fa8231",
-    mandarin: "#fd9644"
+    mandarin: "#fd9644",
+    watermelon: "#ff6b81",
 }
 
 module.exports = palette;

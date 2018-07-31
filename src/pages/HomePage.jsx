@@ -75,7 +75,6 @@ class HomePage extends Component {
     };
 
     _togglePlay = chord => {
-        console.log(chord)
         let chords = [...this.state.progression];
 
         let playingChord = chords.find(element => {
@@ -114,8 +113,8 @@ class HomePage extends Component {
 
         polySynth.triggerAttackRelease(chordNotes, "1m");
 
-        new Tone.Event((time, x) => {
-            this._togglePlay(x);
+        new Tone.Event((time, chord) => {
+            this._stopChord(chord);
         }, chord).start("+1m");
 
         if (Tone.Transport.state !== "started") {
@@ -123,6 +122,20 @@ class HomePage extends Component {
         }
 
         return;
+    }
+
+    _stopChord = chord => {
+        let chords = [...this.state.progression];
+
+        let playingChord = chords.find(element => {
+            return isEqual(chord, element);
+        });
+
+        playingChord.playing = false;
+
+        this.setState({
+            progression: chords
+        })
     }
 
     _cleanup = () => {

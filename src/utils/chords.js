@@ -1,9 +1,9 @@
 import { Chord, Scale, Distance, Note } from "tonal";
-import COLORS from "./colors";
-import teoria from "teoria";
+import shuffle from "lodash/shuffle"
+import { palette } from "../tailwind.config";
 import * as MidiWriter from "midi-writer-js";
 
-const VOICING_THRESHOLD = 5;
+const VOICING_THRESHOLD = 4;
 
 export const generateProgression = (key, oldProgresion) => {
 	let progression = [...oldProgresion];
@@ -29,15 +29,24 @@ export const generateProgression = (key, oldProgresion) => {
 const generateChord = key => {
 	let chords = Chord.names();
 	let scale = Scale.notes(key + " major");
+	let colors = Object.keys(palette)
 	let chordIndex = Math.floor(Math.random() * chords.length);
 	let scaleIndex = Math.floor(Math.random() * scale.length);
-	let colorIndex = Math.floor(Math.random() * COLORS.length);
+	let colorIndex = Math.floor(Math.random() * colors.length);
+
+	const errorChords = ["4", "5", "69#11"];
+	while (errorChords.includes(chords[chordIndex])) {
+		//from testing there are some chords that can't be parsed properly
+		//so we'll kick those out
+		chordIndex = Math.floor(Math.random() * chords.length);
+	}
 	return {
 		root: scale[scaleIndex],
 		type: chords[chordIndex],
 		name: scale[scaleIndex] + chords[chordIndex],
 		lock: false,
-		color: COLORS[colorIndex]
+		playing: false,
+		color: colors[colorIndex]
 	};
 };
 
@@ -61,17 +70,7 @@ export const getChordNotes = progression => {
 	let noteArray = [];
 	for (let currentChord of progression) {
 		let chordNotes = [];
-		chordNotes = Chord.exists(currentChord.name)
-			? Chord.notes(currentChord.name)
-			: teoria
-					.chord(currentChord.name)
-					.notes()
-					.map(note =>
-						note
-							.name()
-							.toString()
-							.toUpperCase()
-					);
+		chordNotes = Chord.notes(currentChord.name)
 		let chordVoicing = voiceChord(chordNotes);
 		noteArray.push(chordVoicing);
 	}
@@ -116,6 +115,31 @@ const voiceChord = chordNotes => {
 	}
 	return voicing;
 };
+
+const isVoiced = (notes) => {
+	return notes.every((current, index) => {
+		let pass = false;
+		const previous = notes[index - 1];
+		const next = notes[index + 1];
+		if (previous && next) {
+			let distancePrevious = Math.abs(previous - current);
+			let distanceNext = Math.abs(next - current);
+			pass = distancePrevious >= VOICING_THRESHOLD && distanceNext >= VOICING_THRESHOLD;
+		}
+		else if (previous) {
+			let distancePrevious = Math.abs(previous - current);
+			pass = distancePrevious >= VOICING_THRESHOLD;
+		}
+		else if (next) {
+			let distanceNext = Math.abs(next - current);
+			pass = distanceNext >= VOICING_THRESHOLD;
+		}
+		else {
+			pass = true;
+		}
+		return pass;
+	});
+}
 
 export const generateMidi = progression => {
 	var track = new MidiWriter.Track();

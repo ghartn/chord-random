@@ -1,25 +1,14 @@
 let tonalChord = require("tonal-chord");
 let tonalNote = require("tonal-note");
 let tonalDistance = require("tonal-distance");
-let teoria = require("teoria");
-
-const VOICING_THRESHOLD = 4;
+let _ = require("lodash")
+const VOICING_THRESHOLD = 2;
 
 const getChordNotes = progression => {
 	let noteArray = [];
 	for (let currentChord of progression) {
 		let chordNotes = [];
-		chordNotes = tonalChord.exists(currentChord)
-			? tonalChord.notes(currentChord)
-			: teoria
-					.chord(currentChord)
-					.notes()
-					.map(note =>
-						note
-							.name()
-							.toString()
-							.toUpperCase()
-					);
+		chordNotes = tonalChord.notes(currentChord)
 		let chordVoicing = voiceChord(chordNotes);
 		noteArray.push(chordVoicing);
 	}
@@ -29,45 +18,65 @@ const getChordNotes = progression => {
 const voiceChord = chordNotes => {
 	if (!chordNotes) return [];
 	let voicing = [];
-	for (var i in chordNotes) {
-		//TODO: sometimes append 4 or 2? bass notes? better inversions
-		let note = chordNotes[i];
-		note = tonalNote.simplify(note);
-		if (i == 0) {
-			//bass note, we will duplicate it in lower octave
-			voicing.push(note + "2");
-			voicing.push(note + "3");
-		} else {
-			//this algorithm is bad and makes no sense
-			let voiced = false;
-			let octave = 3;
-			while (!voiced) {
-				let noteToTry = note + octave;
-				console.log(voicing, noteToTry);
-				for (var j = 1; j < voicing.length; j++) {
-					//iterate through already voiced notes (bass note)
-					let noteVoiced = voicing[j];
-					console.log(noteVoiced);
-					let distance = Math.abs(
-						tonalDistance.semitones(noteVoiced, noteToTry)
-					);
-					console.log(noteVoiced, noteToTry, distance, voicing);
-					if (distance < VOICING_THRESHOLD) {
-						//note voice is too close to note already voiced
-						break;
-					} else {
-						voiced = true;
-						voicing.push(noteToTry);
-						break;
-					}
-				}
-				octave++; //increase octave
-			}
-		}
+	let rootNote = chordNotes[0];
+	voicing.push(rootNote + "2");
+	voicing.push(rootNote + "3");
+	let harmonics = chordNotes.slice(1);
+	let shuffled = _.shuffle(harmonics);
+	let octave = 3;
+
+	let notes = shuffled.map(note => {
+		let simplified = tonalNote.simplify(note + octave);
+		return tonalNote.midi(simplified)
+	}).sort();
+
+	let voiced = isVoiced(notes);
+
+	while (!voiced) {
+		//random?
+		let index = Math.floor(Math.random() * notes.length)
+		notes[index] += 12;
+		voiced = isVoiced(notes.sort());
 	}
-	return voicing;
+
+	let voicedNotes = notes.map(note => tonalNote.fromMidi(note));
+
+	return voicing.concat(voicedNotes);
 };
 
-console.log(getChordNotes(["Dm", "CMaj7", "F", "G"]));
+const isVoiced = (notes) => {
+	return notes.every((current, index) => {
+		let pass = false;
+		const previous = notes[index - 1];
+		const next = notes[index + 1];
+		if (previous && next) {
+			let distancePrevious = Math.abs(previous - current);
+			let distanceNext = Math.abs(next - current);
+			pass = distancePrevious >= VOICING_THRESHOLD && distanceNext >= VOICING_THRESHOLD;
+		}
+		else if (previous) {
+			let distancePrevious = Math.abs(previous - current);
+			pass = distancePrevious >= VOICING_THRESHOLD;
+		}
+		else if (next) {
+			let distanceNext = Math.abs(next - current);
+			pass = distanceNext >= VOICING_THRESHOLD;
+		}
+		else {
+			pass = true;
+		}
+		return pass;
+	});
+}
+
 
 //TODO: check chord exists for every chord
+function test() {
+	let root = "C";
+	let types = tonalChord.names();
+	for (let type of types) {
+		console.log(getChordNotes([root + type]))
+	}
+}
+
+test()

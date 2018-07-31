@@ -75,72 +75,55 @@ class HomePage extends Component {
     };
 
     _togglePlay = chord => {
+        console.log(chord)
         let chords = [...this.state.progression];
 
         let playingChord = chords.find(element => {
             return isEqual(chord, element);
         });
 
-        if (playingChord) playingChord.playing = !playingChord.playing;
+        playingChord.playing = !playingChord.playing;
 
+        this.setState({
+            progression: chords
+        })
 
         if (playingChord.playing) {
-            let chordNotes = chord.notes;
-            let polySynth = new Tone.PolySynth(10, Tone.Synth).toMaster();
-            polySynth.set({
-                "oscillator.type": "triangle",
-                volume: -16,
-                portamento: 0.1,
-                envelope: {
-                    attack: 0.1,
-                    decay: 1.2,
-                    sustain: 0,
-                    release: 0.8
-                }
-            });
-
-            Tone.Master.mute = false;
-            Tone.Transport.bpm.value = this.state.bpm;
-
-            chords = [];
-            let endTime = "";
-            for (let index in chordNotes) {
-                let chord = chordNotes[index];
-                let time = `${Number(index)}${Number(index) !== 0 ? "m" : ""}`;
-                chords.push([time, chord]);
-                endTime = `${Number(index) + 1}m`;
-            }
-
-            let chordPart = new Tone.Part((time, chord) => {
-                polySynth.triggerAttackRelease(chord, "1m", time);
-            }, chords).start(0);
-
-            let stopEvent = new Tone.Event((time, x) => {
-                let chords = [...this.state.progression];
-                let playingChord = chords.find(element => {
-                    return isEqual(chord, element);
-                });
-                if (playingChord) playingChord.playing = !playingChord.playing;
-                this._cleanup();
-            }).start(endTime);
-
-            Tone.Transport.stop();
-            Tone.Transport.start("+0.1");
-
-            this.setState({
-                playing: true,
-                chordPart,
-                stopEvent
-            });
-
-            return;
-        }
-
-        else {
-            this._cleanup()
+            this._playChord(chord);
         }
 
     };
+
+    _playChord = chord => {
+        let chordNotes = chord.notes;
+        let polySynth = new Tone.PolySynth(10, Tone.Synth).toMaster();
+
+        polySynth.set({
+            "oscillator.type": "triangle",
+            volume: -16,
+            portamento: 0.1,
+            envelope: {
+                attack: 0.1,
+                decay: 1.2,
+                sustain: 0,
+                release: 0.8
+            }
+        });
+
+        Tone.Master.mute = false;
+
+        polySynth.triggerAttackRelease(chordNotes, "1m");
+
+        new Tone.Event((time, x) => {
+            this._togglePlay(x);
+        }, chord).start("+1m");
+
+        if (Tone.Transport.state !== "started") {
+            Tone.Transport.start();
+        }
+
+        return;
+    }
 
     _cleanup = () => {
         if (this.state.chordPart) {
@@ -176,7 +159,7 @@ class HomePage extends Component {
         });
     };
 
-    _listen = () => {
+    _playProgression = () => {
         if (this.state.playing) {
             this._cleanup();
             return;
@@ -185,6 +168,7 @@ class HomePage extends Component {
         let progessionInKey = [...this.state.progression];
         let chordNotes = progessionInKey.map(chord => chord.notes)
         let polySynth = new Tone.PolySynth(10, Tone.Synth).toMaster();
+
         polySynth.set({
             "oscillator.type": "triangle",
             volume: -16,
@@ -206,7 +190,7 @@ class HomePage extends Component {
             let chord = chordNotes[index];
             let time = `${Number(index)}${Number(index) !== 0 ? "m" : ""}`;
             chords.push([time, chord]);
-            endTime = `${Number(index) + 1}m`;
+            endTime = `+${Number(index) + 1}m`;
         }
 
         let chordPart = new Tone.Part((time, chord) => {
@@ -234,7 +218,6 @@ class HomePage extends Component {
                 chord={chord}
                 toggleLock={this._toggleChordLock}
                 togglePlay={this._togglePlay}
-                playing={this.state.playing}
             />
         ));
         return (
@@ -275,7 +258,7 @@ class HomePage extends Component {
                 <div className="flex justify-end">
                     <button
                         className={`btn bg-${this.state.color} text-white transition mr-4`}
-                        onClick={this._listen}
+                        onClick={this._playProgression}
                     >
                         {!this.state.playing ? "listen" : "stop"}
                     </button>

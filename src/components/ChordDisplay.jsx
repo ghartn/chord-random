@@ -31,12 +31,12 @@ const ChordDisplay = ({ chord, toggleLock, togglePlay }) => {
 				>
 					{chord.lock ? <FiLock size="1.25em" /> : <FiUnlock size="1.25em" />}
 				</span>
-				{/* <span
+				<span
 					className="md:w-full md:text-center text-white transition cursor-pointer "
 					onClick={() => togglePlay(chord)}
 				>
 					{chord.playing ? <FiPause size="1.25em" /> : <FiPlay size="1.25em" />}
-				</span> */}
+				</span>
 			</div>
 		</span>
 	);

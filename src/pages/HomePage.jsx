@@ -77,6 +77,57 @@ class HomePage extends Component {
 		});
 	};
 
+	_togglePlay = chord => {
+		if (this.state.playing) {
+			this._cleanup();
+		}
+		this.setState({
+			playing: !this.state.playing
+		});
+		let chordNotes = getChordNotes([chord]);
+		let polySynth = new Tone.PolySynth(6, Tone.Synth).toMaster();
+		polySynth.set({
+			"oscillator.type": "triangle",
+			volume: -16,
+			portamento: 0.1,
+			envelope: {
+				attack: 0.1,
+				decay: 1.2,
+				sustain: 0,
+				release: 0.8
+			}
+		});
+
+		Tone.Master.mute = false;
+		Tone.Transport.bpm.value = this.state.bpm;
+
+		let chords = [];
+		let endTime = "";
+		for (let index in chordNotes) {
+			let chord = chordNotes[index];
+			let time = `${Number(index)}${Number(index) !== 0 ? "m" : ""}`;
+			chords.push([time, chord]);
+			endTime = `${Number(index) + 1}m`;
+		}
+
+		let chordPart = new Tone.Part((time, chord) => {
+			polySynth.triggerAttackRelease(chord, "1m", time);
+		}, chords).start(0);
+
+		let stopEvent = new Tone.Event((time, x) => {
+			this._cleanup();
+		}).start(endTime);
+
+		Tone.Transport.stop();
+		Tone.Transport.start("+0.1");
+
+		this.setState({
+			playing: true,
+			chordPart,
+			stopEvent
+		});
+	};
+
 	_cleanup = () => {
 		if (this.state.chordPart) {
 			this.state.chordPart.dispose();
@@ -168,6 +219,8 @@ class HomePage extends Component {
 				key={index}
 				chord={chord}
 				toggleLock={this._toggleChordLock}
+				togglePlay={this._togglePlay}
+				playing={this.state.playing}
 			/>
 		));
 		return (

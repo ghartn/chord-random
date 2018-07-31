@@ -10,7 +10,7 @@ import ChordDisplay from "../components/ChordDisplay";
 import KEYS from "../utils/keys";
 import isEqual from "lodash/isEqual";
 import Tone from "tone";
-import { palette } from "../tailwind.config";
+import palette from "../utils/palette";
 
 class HomePage extends Component {
     constructor() {

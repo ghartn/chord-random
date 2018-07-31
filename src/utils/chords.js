@@ -1,6 +1,6 @@
 import { Chord, Scale, Distance, Note } from "tonal";
 import shuffle from "lodash/shuffle"
-import { palette } from "../tailwind.config";
+import palette from "./palette";
 import * as MidiWriter from "midi-writer-js";
 
 const VOICING_THRESHOLD = 4;

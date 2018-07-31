@@ -4,7 +4,7 @@
 	"private": true,
 	"homepage": "http://ghartn.github.io/chord-random",
 	"dependencies": {
-		"autoprefixer": "^9.0.0",
+		"autoprefixer": "^9.0.2",
 		"axios": "^0.18.0",
 		"glhd-tailwindcss-transitions": "^0.3.0",
 		"lodash": "^4.17.10",

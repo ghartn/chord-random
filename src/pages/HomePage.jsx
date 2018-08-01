@@ -9,7 +9,6 @@ import ProgressionDisplay from "../components/ProgressionDisplay";
 import { CSSTransition } from 'react-transition-group';
 import { arrayMove } from "react-sortable-hoc"
 import KEYS from "../utils/keys";
-import isEqual from "lodash/isEqual";
 import Tone from "tone";
 import palette from "../utils/palette";
 
@@ -67,9 +66,9 @@ class HomePage extends Component {
 
     _toggleChordLock = chord => {
         let chords = [...this.state.progression];
-        let lockedChord = chords.find(element => {
-            return isEqual(chord, element);
-        });
+        let lockedChord = chords.find(element =>
+            chord.id === element.id
+        );
         if (lockedChord) lockedChord.lock = !lockedChord.lock;
         this.setState({
             progression: chords
@@ -79,11 +78,11 @@ class HomePage extends Component {
     _togglePlay = chord => {
         let chords = [...this.state.progression];
 
-        let playingChord = chords.find(element => {
-            return isEqual(chord, element);
-        });
+        let playingChord = chords.find(element =>
+            chord.id === element.id
+        );
 
-        playingChord.playing = !playingChord.playing;
+        if (playingChord) playingChord.playing = !playingChord.playing;
 
         this.setState({
             progression: chords
@@ -129,11 +128,11 @@ class HomePage extends Component {
     _stopChord = chord => {
         let chords = [...this.state.progression];
 
-        let playingChord = chords.find(element => {
-            return isEqual(chord, element);
-        });
+        let playingChord = chords.find(element =>
+            chord.id === element.id
+        );
 
-        playingChord.playing = false;
+        if (playingChord) playingChord.playing = false;
 
         this.setState({
             progression: chords

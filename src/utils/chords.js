@@ -1,4 +1,5 @@
 import { Chord, Scale, Distance, Note } from "tonal";
+import shortid from "shortid";
 import palette from "./palette";
 import * as MidiWriter from "midi-writer-js";
 
@@ -40,6 +41,7 @@ const generateChord = key => {
 		chordIndex = Math.floor(Math.random() * chords.length);
 	}
 	return {
+		id: shortid.generate(),
 		root: scale[scaleIndex],
 		type: chords[chordIndex],
 		name: scale[scaleIndex] + chords[chordIndex],
@@ -55,13 +57,10 @@ export const mapProgressionToKey = (progression, oldKey, newKey) => {
 
 	let cleanedProgression = [];
 	progression.forEach(chord => {
-		let newChord = { ...chord };
+		let newChord = Object.assign({}, chord)
 		let interval = Distance.interval(oldKey, newKey);
 		newChord.root = Distance.transpose(chord.root, interval);
 		newChord.name = newChord.root + newChord.type;
-		newChord.lock = chord.lock;
-		newChord.color = chord.color;
-		newChord.playing = chord.playing;
 		newChord.notes = getChordNotes(newChord.root + newChord.type);
 		cleanedProgression.push(newChord);
 	});

@@ -61,6 +61,8 @@ export const mapProgressionToKey = (progression, oldKey, newKey) => {
 		newChord.name = newChord.root + newChord.type;
 		newChord.lock = chord.lock;
 		newChord.color = chord.color;
+		newChord.playing = chord.playing;
+		newChord.notes = getChordNotes(newChord.root + newChord.type);
 		cleanedProgression.push(newChord);
 	});
 	return cleanedProgression;

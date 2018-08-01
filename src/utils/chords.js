@@ -28,7 +28,7 @@ export const generateProgression = (key, oldProgresion) => {
 const generateChord = key => {
 	let chords = Chord.names();
 	let scale = Scale.notes(key + " major");
-	let colors = Object.keys(palette)
+	let colors = Object.keys(palette);
 	let chordIndex = Math.floor(Math.random() * chords.length);
 	let scaleIndex = Math.floor(Math.random() * scale.length);
 	let colorIndex = Math.floor(Math.random() * colors.length);
@@ -68,7 +68,7 @@ export const mapProgressionToKey = (progression, oldKey, newKey) => {
 
 export const getChordNotes = chordName => {
 	let chordNotes = [];
-	chordNotes = Chord.notes(chordName)
+	chordNotes = Chord.notes(chordName);
 	return voiceChord(chordNotes);
 };
 
@@ -78,7 +78,7 @@ const voiceChord = chordNotes => {
 	let rootNote = chordNotes[0];
 	voicing.push(rootNote + "2");
 	let notes = chordNotes.slice(1);
-	let octaves = [3, 4]
+	let octaves = [3, 4];
 
 	for (let note of notes) {
 		let octave = octaves[Math.floor(Math.random() * octaves.length)];
@@ -87,7 +87,7 @@ const voiceChord = chordNotes => {
 	return voicing;
 };
 
-const isVoiced = (notes) => {
+const isVoiced = notes => {
 	return notes.every((current, index) => {
 		let pass = false;
 		const previous = notes[index - 1];
@@ -95,22 +95,21 @@ const isVoiced = (notes) => {
 		if (previous && next) {
 			let distancePrevious = Math.abs(previous - current);
 			let distanceNext = Math.abs(next - current);
-			pass = distancePrevious >= VOICING_THRESHOLD && distanceNext >= VOICING_THRESHOLD;
-		}
-		else if (previous) {
+			pass =
+				distancePrevious >= VOICING_THRESHOLD &&
+				distanceNext >= VOICING_THRESHOLD;
+		} else if (previous) {
 			let distancePrevious = Math.abs(previous - current);
 			pass = distancePrevious >= VOICING_THRESHOLD;
-		}
-		else if (next) {
+		} else if (next) {
 			let distanceNext = Math.abs(next - current);
 			pass = distanceNext >= VOICING_THRESHOLD;
-		}
-		else {
+		} else {
 			pass = true;
 		}
 		return pass;
 	});
-}
+};
 
 export const generateMidi = progression => {
 	var track = new MidiWriter.Track();
@@ -123,7 +122,7 @@ export const generateMidi = progression => {
 	for (let chord of progression) {
 		track.addEvent(
 			new MidiWriter.NoteEvent({
-				pitch: chord,
+				pitch: chord.notes,
 				duration: "2"
 			})
 		);

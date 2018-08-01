@@ -8,7 +8,7 @@ const ChordDisplay = ({ chord, toggleLock, togglePlay }) => {
 		<span
 			className={`flex flex-1 flex-wrap tracking-wide py-2 md:py-6 px-4 justify-center md: justify-between items-center bg-${
 				chord.color
-				} transition`}
+			} transition`}
 		>
 			<div className="md:w-full md:text-center mb-4 text-shadow-sm">
 				<span className="text-3xl text-white">{root}</span>

@@ -5,7 +5,9 @@ import {
     mapProgressionToKey
 } from "../utils/chords";
 import Loader from "../components/Loader";
-import ChordDisplay from "../components/ChordDisplay";
+import ProgressionDisplay from "../components/ProgressionDisplay";
+import { CSSTransition } from 'react-transition-group';
+import { arrayMove } from "react-sortable-hoc"
 import KEYS from "../utils/keys";
 import isEqual from "lodash/isEqual";
 import Tone from "tone";
@@ -138,6 +140,12 @@ class HomePage extends Component {
         })
     }
 
+    _onSort = ({ oldIndex, newIndex }) => {
+        this.setState({
+            progression: arrayMove(this.state.progression, oldIndex, newIndex),
+        });
+    }
+
     _cleanup = () => {
         if (this.state.chordPart) {
             this.state.chordPart.dispose();
@@ -224,29 +232,22 @@ class HomePage extends Component {
         });
     };
 
-    _renderChords = progression => {
-        let progressionDisplay = progression.map((chord, index) => (
-            <ChordDisplay
-                key={index}
-                chord={chord}
+    _renderChords = () => {
+        return (
+            <ProgressionDisplay
+                progression={this.state.progression}
                 toggleLock={this._toggleChordLock}
                 togglePlay={this._togglePlay}
+                onSort={this._onSort}
             />
-        ));
-        return (
-            <span className="flex flex-col md:flex-row flex-wrap transition">
-                {progressionDisplay}
-            </span>
         );
     };
 
     _renderProgression = () => {
-        const progressionDisplay = this._renderChords(this.state.progression);
+        const progressionDisplay = this._renderChords();
         return (
             <div className="flex flex-col text-center p-4 md:p-12 shadow-lg bg-white rounded m-2">
-                <div className="self-start text-left mb-6 bg-grey-lighter rounded w-full">
-                    {progressionDisplay}
-                </div>
+                {progressionDisplay}
                 <div className="flex justify-between items-center mb-6">
                     <select
                         name="key"
@@ -287,12 +288,21 @@ class HomePage extends Component {
         const { color } = this.state;
         return (
             <div
-                className={`flex flex-1 items-center justify-center  w-full bg-${color} transition`}
+                className={`flex flex-1 items-center justify-center w-full bg-${color} transition`}
             >
                 <div className="flex flex-col container mx-auto">
                     <Loader loading={this.state.loading} color={color} />
                     {this.state.progression.length > 0 ? (
-                        this._renderProgression()
+                        <CSSTransition
+                            appear
+                            in={this.state.progression.length > 0}
+                            timeout={300}
+                            classNames="pop"
+                            unmountOnExit
+                        >
+                            {this._renderProgression()}
+                        </CSSTransition>
+
                     ) : (
                             <button
                                 className="text-5xl text-grey-lightest hover:text-white text-shadow transition"

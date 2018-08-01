@@ -11,6 +11,10 @@ body,
 	box-sizing: border-box;
 }
 
+.transition {
+	transition-delay: 0s;
+}
+
 .btn {
 	@apply py-2 px-4 rounded;
 }
@@ -150,4 +154,17 @@ svg.text-shadow-sm, .text-shadow-sm svg {
 		transform: rotate(-360deg);
 		-webkit-transform: rotate(-360deg);
 	}
+}
+
+.pop-appear {
+	opacity: 0.01;
+	transform: scale(0)
+	
+}
+
+.pop-appear-active {
+	opacity: 1;
+	transform: scale(1);
+	transition: all 225ms ease;
+	transition-delay: 0s;
 }

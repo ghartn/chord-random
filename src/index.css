@@ -4999,6 +4999,10 @@ body,
   box-sizing: border-box;
 }
 
+.transition {
+  transition-delay: 0s;
+}
+
 .btn {
   padding-top: .5rem;
   padding-bottom: .5rem;
@@ -5167,6 +5171,20 @@ svg.text-shadow-sm,
             transform: rotate(-360deg);
     -webkit-transform: rotate(-360deg);
   }
+}
+
+.pop-appear {
+  opacity: .01;
+  -webkit-transform: scale(0);
+          transform: scale(0);
+}
+
+.pop-appear-active {
+  opacity: 1;
+  -webkit-transform: scale(1);
+          transform: scale(1);
+  transition: all 225ms ease;
+  transition-delay: 0s;
 }
 
 @media (min-width: 450px) {

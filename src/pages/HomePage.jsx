@@ -6,9 +6,10 @@ import {
 } from "../utils/chords";
 import Loader from "../components/Loader";
 import ProgressionDisplay from "../components/ProgressionDisplay";
+import Piano from "../components/Piano"
 import { CSSTransition } from 'react-transition-group';
 import { arrayMove } from "react-sortable-hoc"
-import KEYS from "../utils/keys";
+import keys from "../utils/keys";
 import Tone from "tone";
 import palette from "../utils/palette";
 
@@ -23,6 +24,7 @@ class HomePage extends Component {
             key: "C",
             bpm: 120,
             playing: false,
+            playingChord: {},
             chordPart: null,
             stopEvent: null
         };
@@ -85,19 +87,52 @@ class HomePage extends Component {
         if (playingChord) playingChord.playing = !playingChord.playing;
 
         this.setState({
-            progression: chords
+            progression: chords,
+            playingChord: playingChord
+        }, () => {
+            if (playingChord.playing) {
+                this._playChord(chord);
+            }
         })
-
-        if (playingChord.playing) {
-            this._playChord(chord);
-        }
 
     };
 
+    _playProgression = () => {
+        Tone.Transport.start();
+
+        if (this.state.playing) {
+            this._cleanup();
+            return;
+        }
+
+        let progressionInKey = [...this.state.progression];
+
+        let endTime = "";
+        for (let index in progressionInKey) {
+            let chord = progressionInKey[index];
+            let time = Number(index) === 0 ? "+0.1" : "+" + index + "m";
+            new Tone.Event((time, x) => {
+                this._togglePlay(chord);
+            }).start(time);
+            endTime = "+" + (Number(index) + 1) + "m"
+        }
+
+        new Tone.Event((time, x) => {
+            this._cleanup();
+        }).start(endTime);
+
+
+
+        this.setState({
+            playing: true
+        });
+    };
+
     _playChord = chord => {
+        Tone.Transport.start();
+
         let chordNotes = chord.notes;
         let polySynth = new Tone.PolySynth(10, Tone.Synth).toMaster();
-
         polySynth.set({
             "oscillator.type": "triangle",
             volume: -16,
@@ -118,10 +153,6 @@ class HomePage extends Component {
             this._stopChord(chord);
         }, chord).start("+1m");
 
-        if (Tone.Transport.state !== "started") {
-            Tone.Transport.start();
-        }
-
         return;
     }
 
@@ -132,10 +163,18 @@ class HomePage extends Component {
             chord.id === element.id
         );
 
-        if (playingChord) playingChord.playing = false;
+        let currentlyPlayingChord = { ...this.state.playingChord }
+
+        if (playingChord) {
+            playingChord.playing = false;
+            if (playingChord.id === this.state.playingChord.id) {
+                currentlyPlayingChord = {}
+            }
+        }
 
         this.setState({
-            progression: chords
+            progression: chords,
+            playingChord: currentlyPlayingChord
         })
     }
 
@@ -152,11 +191,17 @@ class HomePage extends Component {
         if (this.state.stopEvent) {
             this.state.stopEvent.dispose();
         }
+        let progression = [...this.state.progression];
+        progression.forEach(chord => {
+            chord.playing = false;
+        })
         Tone.Master.mute = true;
         Tone.Transport.stop();
         Tone.Transport.cancel(0);
         this.setState({
+            progression,
             playing: false,
+            playingChord: {},
             chordPart: null,
             stopEvent: null
         });
@@ -164,6 +209,7 @@ class HomePage extends Component {
     };
 
     _generate = () => {
+        //set state for animation if 'regenerating'
         if (this.state.progression.length > 0) {
             this.setState({
                 generating: true
@@ -187,61 +233,6 @@ class HomePage extends Component {
             progression,
             key: this.state.key,
             previousKey: previousKey
-        });
-
-        //set state for animation if 'regenerating'
-
-    };
-
-    _playProgression = () => {
-        if (this.state.playing) {
-            this._cleanup();
-            return;
-        }
-
-        let progessionInKey = [...this.state.progression];
-        let chordNotes = progessionInKey.map(chord => chord.notes)
-        let polySynth = new Tone.PolySynth(10, Tone.Synth).toMaster();
-
-        polySynth.set({
-            "oscillator.type": "triangle",
-            volume: -16,
-            portamento: 0.1,
-            envelope: {
-                attack: 0.1,
-                decay: 1.2,
-                sustain: 0,
-                release: 0.8
-            }
-        });
-
-        Tone.Master.mute = false;
-        Tone.Transport.bpm.value = this.state.bpm;
-
-        let chords = [];
-        let endTime = "";
-        for (let index in chordNotes) {
-            let chord = chordNotes[index];
-            let time = `${Number(index)}${Number(index) !== 0 ? "m" : ""}`;
-            chords.push([time, chord]);
-            endTime = `+${Number(index) + 1}m`;
-        }
-
-        let chordPart = new Tone.Part((time, chord) => {
-            polySynth.triggerAttackRelease(chord, "1m", time);
-        }, chords).start(0);
-
-        let stopEvent = new Tone.Event((time, x) => {
-            this._cleanup();
-        }).start(endTime);
-
-        Tone.Transport.stop();
-        Tone.Transport.start("+0.1");
-
-        this.setState({
-            playing: true,
-            chordPart,
-            stopEvent
         });
     };
 
@@ -268,21 +259,19 @@ class HomePage extends Component {
                         value={this.state.key}
                         onChange={this._onKeyChange}
                     >
-                        {KEYS.map((key, index) => (
+                        {keys.map((key, index) => (
                             <option key={index} value={key.value}>
                                 {key.label}
                             </option>
                         ))}
                     </select>
-                    <a
-                        className="no-underline text-grey-dark hover:text-grey cursor-pointer transition"
-                        href={this._downloadMidi()}
-                    //download
-                    >
-                        download midi
-					</a>
+                    <a className="no-underline" href={this._downloadMidi()}>
+                        <button className="btn btn-ghost transition">
+                            download midi
+                        </button>
+                    </a>
                 </div>
-                <div className="flex justify-end">
+                <div className="flex justify-end mb-6">
                     <button
                         className={`btn bg-${this.state.color} text-white transition mr-4`}
                         onClick={this._playProgression}
@@ -293,6 +282,7 @@ class HomePage extends Component {
                         regenerate
 					</button>
                 </div>
+                <Piano chord={this.state.playingChord.notes} />
             </div>
         );
     };
@@ -322,9 +312,10 @@ class HomePage extends Component {
                                 onClick={() => this._generate()}
                             >
                                 generate
-						</button>
+						    </button>
                         )}
                 </div>
+
             </div>
         );
     }

@@ -210,3 +210,28 @@ svg.text-shadow-sm, .text-shadow-sm svg {
 		transform: rotate(0);
 	}
 }
+
+  ul.piano li {
+	position: relative;
+	border-radius: 2px;
+	display: inline-block;
+	list-style: none;
+	width: 25px;
+	height: 120px;
+	margin: 0;
+	box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.1);
+  }
+  ul.piano li.black-key {
+	z-index: 20;
+	background: black;
+	transform-origin: center top;
+	position: absolute;
+	transform: translateX(-50%) scale(0.6);
+  }
+  ul.piano li.white-key {
+	background: white;
+  }
+  ul.piano li.pressed {
+	background: rgba(255, 0, 0, 0.2);
+  }
+  

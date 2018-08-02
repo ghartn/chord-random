@@ -21,7 +21,6 @@ let palette = {
 	cutegreen: "#26de81",
 	green: "#20bf6b",
 	turqoise: "#0fb9b1",
-	bronze: "#fa8231",
 	mandarin: "#fd9644",
 	watermelon: "#ff6b81"
 };

@@ -11,13 +11,12 @@ export const generateProgression = (key, oldProgresion) => {
 	//check for locked chords
 	if (progression && progression.length > 0) {
 		progression.forEach((chord, index) => {
-			if (chord.lock) {
-				progression[index] = chord;
-			} else {
-				let newChord = generateChord(key, colors);
-				progression[index] = newChord;
-				colors = colors.filter(color => color !== newChord.color)
+			let newChord = chord;
+			if (!chord.lock) {
+				newChord = generateChord(key, colors);
 			}
+			progression[index] = newChord;
+			colors = colors.filter(color => color !== newChord.color);
 		});
 	} else {
 		for (let i = 0; i < 4; i++) {

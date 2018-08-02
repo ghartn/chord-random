@@ -12,7 +12,7 @@ const SortableItem = SortableElement(({ chord, toggleLock, togglePlay }) =>
 
 const SortableList = SortableContainer(({ progression, toggleLock, togglePlay }) => {
     return (
-        <ul className="list-reset flex flex-col md:flex-row flex-wrap mb-4 transition bg-grey-lighter">
+        <ul className="list-reset flex flex-col md:flex-row flex-wrap mb-8 transition bg-grey-lighter">
             {progression.map((chord, index) => (
                 <SortableItem key={`chord-${index}`} index={index} chord={chord} toggleLock={toggleLock}
                     togglePlay={togglePlay} />

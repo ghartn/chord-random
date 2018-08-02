@@ -295,7 +295,7 @@ class HomePage extends Component {
                         <CSSTransition
                             appear
                             in={this.state.progression.length > 0}
-                            timeout={300}
+                            timeout={10000}
                             classNames="pop"
                             unmountOnExit
                         >

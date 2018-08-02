@@ -86,7 +86,6 @@ select option {
 }
 
 
-
 .text-shadow {
 	text-shadow: 2px 4px 4px rgba(0, 0, 0, 0.1);
 }
@@ -157,14 +156,28 @@ svg.text-shadow-sm, .text-shadow-sm svg {
 }
 
 .pop-appear {
-	opacity: 0.01;
-	transform: scale(0)
-	
+	-webkit-animation: pop 400ms ease;
+	animation: pop 400ms ease;
+	transition: all 400ms ease;
 }
 
-.pop-appear-active {
+.pop-appear-done {
 	opacity: 1;
 	transform: scale(1);
-	transition: all 225ms ease;
-	transition-delay: 0s;
+	transition: all 400ms ease;
+}
+
+
+@keyframes pop {
+	0% {
+		opacity: 0.01;
+		transform: scale(0)
+	}
+	50% {
+		transform: scale(1.1);
+	}
+	100% {
+		opacity: 1;
+		transform: scale(1);
+	}
 }

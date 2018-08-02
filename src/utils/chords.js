@@ -7,29 +7,33 @@ const VOICING_THRESHOLD = 4;
 
 export const generateProgression = (key, oldProgresion) => {
 	let progression = [...oldProgresion];
-
+	let colors = Object.keys(palette);
 	//check for locked chords
 	if (progression && progression.length > 0) {
 		progression.forEach((chord, index) => {
 			if (chord.lock) {
 				progression[index] = chord;
 			} else {
-				progression[index] = generateChord(key);
+				let newChord = generateChord(key, colors);
+				progression[index] = newChord;
+				colors = colors.filter(color => color !== newChord.color)
 			}
 		});
 	} else {
 		for (let i = 0; i < 4; i++) {
-			progression.push(generateChord(key));
+			let newChord = generateChord(key, colors)
+			progression.push(newChord);
+			colors = colors.filter(color => color !== newChord.color)
+
 		}
 	}
 
 	return progression;
 };
 
-const generateChord = key => {
+const generateChord = (key, colors) => {
 	let chords = Chord.names();
 	let scale = Scale.notes(key + " major");
-	let colors = Object.keys(palette);
 	let chordIndex = Math.floor(Math.random() * chords.length);
 	let scaleIndex = Math.floor(Math.random() * scale.length);
 	let colorIndex = Math.floor(Math.random() * colors.length);

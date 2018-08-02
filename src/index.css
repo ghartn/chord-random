@@ -5224,6 +5224,84 @@ svg.text-shadow-sm,
   }
 }
 
+.shake {
+  -webkit-animation: shake 300ms ease;
+          animation: shake 300ms ease;
+  transition: all 300ms ease;
+}
+
+@-webkit-keyframes shake {
+  0% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+
+  15% {
+    -webkit-transform: rotate(1deg);
+            transform: rotate(1deg);
+    -webkit-transform: scale(1.03);
+            transform: scale(1.03);
+  }
+
+  30% {
+    -webkit-transform: rotate(-1deg);
+            transform: rotate(-1deg);
+  }
+
+  66% {
+    -webkit-transform: rotate(1deg);
+            transform: rotate(1deg);
+  }
+
+  8% {
+    -webkit-transform: rotate(-1deg);
+            transform: rotate(-1deg);
+  }
+
+  100% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+    -webkit-transform: rotate(0);
+            transform: rotate(0);
+  }
+}
+
+@keyframes shake {
+  0% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+
+  15% {
+    -webkit-transform: rotate(1deg);
+            transform: rotate(1deg);
+    -webkit-transform: scale(1.03);
+            transform: scale(1.03);
+  }
+
+  30% {
+    -webkit-transform: rotate(-1deg);
+            transform: rotate(-1deg);
+  }
+
+  66% {
+    -webkit-transform: rotate(1deg);
+            transform: rotate(1deg);
+  }
+
+  8% {
+    -webkit-transform: rotate(-1deg);
+            transform: rotate(-1deg);
+  }
+
+  100% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+    -webkit-transform: rotate(0);
+            transform: rotate(0);
+  }
+}
+
 @media (min-width: 450px) {
   .sm\:list-reset {
     list-style: none;

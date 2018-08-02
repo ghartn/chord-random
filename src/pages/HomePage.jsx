@@ -16,7 +16,7 @@ class HomePage extends Component {
     constructor() {
         super();
         this.state = {
-            loading: false,
+            generating: false,
             color: "grey-darkest",
             progression: [],
             previousKey: "C",
@@ -164,10 +164,19 @@ class HomePage extends Component {
     };
 
     _generate = () => {
-        this.setState({
-            key: this.state.key,
-            previousKey: this.state.key
-        });
+        if (this.state.progression.length > 0) {
+            this.setState({
+                generating: true
+            }, () => {
+                setTimeout(() => {
+                    this.setState({
+                        generating: false
+                    })
+                }, 300)
+            });
+        }
+
+        let previousKey = this.state.key;
         this._cleanup();
         this._randomizeColor();
         let progression = generateProgression(
@@ -175,8 +184,13 @@ class HomePage extends Component {
             this.state.progression
         );
         this.setState({
-            progression
+            progression,
+            key: this.state.key,
+            previousKey: previousKey
         });
+
+        //set state for animation if 'regenerating'
+
     };
 
     _playProgression = () => {
@@ -245,7 +259,7 @@ class HomePage extends Component {
     _renderProgression = () => {
         const progressionDisplay = this._renderChords();
         return (
-            <div className="flex flex-col text-center p-4 md:p-12 shadow-lg bg-white rounded m-2">
+            <div className={`flex flex-col text-center p-4 md:p-12 shadow-lg bg-white rounded m-2 ${this.state.generating ? "shake" : ""}`}>
                 {progressionDisplay}
                 <div className="flex justify-between items-center mb-6">
                     <select
@@ -295,7 +309,7 @@ class HomePage extends Component {
                         <CSSTransition
                             appear
                             in={this.state.progression.length > 0}
-                            timeout={10000}
+                            timeout={500}
                             classNames="pop"
                             unmountOnExit
                         >

@@ -271,7 +271,7 @@ class HomePage extends Component {
                         </button>
                     </a>
                 </div>
-                <div className="flex justify-end mb-6">
+                <div className="flex justify-end mb-8">
                     <button
                         className={`btn bg-${this.state.color} text-white transition mr-4`}
                         onClick={this._playProgression}

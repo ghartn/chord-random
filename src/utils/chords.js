@@ -79,15 +79,28 @@ export const getChordNotes = chordName => {
 const voiceChord = chordNotes => {
 	if (!chordNotes) return [];
 	let voicing = [];
+
+	//add root note in bass
 	let rootNote = chordNotes[0];
 	voicing.push(rootNote + "2");
+	//slice so we don't voice twice
 	let notes = chordNotes.slice(1);
-	let octaves = [3, 4];
 
-	for (let note of notes) {
-		let octave = octaves[Math.floor(Math.random() * octaves.length)];
-		voicing.push(Note.simplify(note) + octave);
-	}
+	//start voicing in octave 3
+	let octave = 3;
+	notes.forEach((current, i) => {
+		let next = notes[i + 1];
+		if (next) {
+			let currentMidi = Note.midi(current + octave), nextMidi = Note.midi(next + octave);
+			if (nextMidi < currentMidi) {
+				//we crossed an octave so increment
+				octave++;
+			}
+		}
+		let currentVoicing = String(Note.simplify(current)) + octave;
+		voicing.push(currentVoicing);
+	});
+	console.log(voicing)
 	return voicing;
 };
 

@@ -1,4 +1,5 @@
 import { Chord, Scale, Distance, Note } from "tonal";
+import ChordTypes from "./ChordTypes"
 import shortid from "shortid";
 import palette from "./palette";
 import * as MidiWriter from "midi-writer-js";
@@ -31,24 +32,33 @@ export const generateProgression = (key, oldProgresion) => {
 };
 
 const generateChord = (key, colors) => {
-	let chords = Chord.names();
 	let scale = Scale.notes(key + " major");
-	let chordIndex = Math.floor(Math.random() * chords.length);
 	let scaleIndex = Math.floor(Math.random() * scale.length);
 	let colorIndex = Math.floor(Math.random() * colors.length);
 
-	const errorChords = ["4", "5", "69#11"];
-	while (errorChords.includes(chords[chordIndex])) {
-		//from testing there are some chords that can't be parsed properly
-		//so we'll kick those out
-		chordIndex = Math.floor(Math.random() * chords.length);
+	const majorDegrees = [0, 3, 4];
+	const minorDegrees = [1, 2, 5];
+	let chordType = "";
+
+	if (majorDegrees.includes(scaleIndex)) {
+		let types = ChordTypes.filter(x => x.major);
+		chordType = types[Math.floor(Math.random() * types.length)];
 	}
+	else if (minorDegrees.includes(scaleIndex)) {
+		let types = ChordTypes.filter(x => x.minor);
+		chordType = types[Math.floor(Math.random() * types.length)];
+	} else {
+		chordType = ChordTypes[Math.floor(Math.random() * ChordTypes.length)];
+	}
+
+	chordType = chordType ? chordType.name : "";
+
 	return {
 		id: shortid.generate(),
 		root: scale[scaleIndex],
-		type: chords[chordIndex],
-		name: scale[scaleIndex] + chords[chordIndex],
-		notes: getChordNotes(scale[scaleIndex] + chords[chordIndex]),
+		type: chordType,
+		name: scale[scaleIndex] + chordType,
+		notes: getChordNotes(scale[scaleIndex] + chordType),
 		lock: false,
 		playing: false,
 		color: colors[colorIndex]
@@ -100,7 +110,6 @@ const voiceChord = chordNotes => {
 		let currentVoicing = String(Note.simplify(current)) + octave;
 		voicing.push(currentVoicing);
 	});
-	console.log(voicing)
 	return voicing;
 };
 

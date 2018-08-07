@@ -1,6 +1,7 @@
+let chords = require("./chords")
 let tonalChord = require("tonal-chord");
 let tonalNote = require("tonal-note");
-let tonalDistance = require("tonal-distance");
+let tonalScale = require("tonal-scale");
 let _ = require("lodash");
 const VOICING_THRESHOLD = 2;
 
@@ -72,11 +73,6 @@ const isVoiced = notes => {
 
 //TODO: check chord exists for every chord
 function test() {
-	let root = "C";
-	let types = tonalChord.names();
-	for (let type of types) {
-		console.log(getChordNotes([root + type]));
-	}
 }
 
 test();

@@ -6,7 +6,7 @@ import HomePage from "./pages/HomePage";
 class App extends Component {
 	render() {
 		return (
-			<Router basename={process.env.PUBLIC_URL}>
+			<Router>
 				<Switch>
 					<BaseRoute path="/:progression?" component={HomePage} />
 				</Switch>

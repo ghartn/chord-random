@@ -8,7 +8,7 @@ class App extends Component {
 		return (
 			<Router basename={process.env.PUBLIC_URL}>
 				<Switch>
-					<BaseRoute path="/" component={HomePage} />
+					<BaseRoute path="/:progression?" component={HomePage} />
 				</Switch>
 			</Router>
 		);

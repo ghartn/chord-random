@@ -158,3 +158,33 @@ export const generateMidi = progression => {
 	//write.saveMIDI('generated-midi-' + new Date().toDateString());
 	return write.dataUri();
 };
+
+export const restoreProgression = (progression) => {
+	let colors = Object.keys(palette);
+
+	let newProgression = progression.map(chord => {
+		let chordName = chord.replace(/sh/g, "#");
+		let chordTokens = Chord.tokenize(chordName);
+		let colorIndex = Math.floor(Math.random() * colors.length);
+		let color = colors[colorIndex];
+		colors = colors.filter(x => x !== color);
+		return {
+			id: shortid.generate(),
+			root: chordTokens[0],
+			type: chordTokens[1],
+			name: chordName,
+			notes: getChordNotes(chordName),
+			lock: false,
+			playing: false,
+			color: color
+		};
+	})
+	return newProgression;
+}
+
+export const getProgressionURL = (progression) => {
+	let progressionURL = "";
+	progression.forEach(chord => progressionURL += chord.name + "-");
+	progressionURL = progressionURL.replace(/\#/g, "sh");
+	return progressionURL.substring(0, progressionURL.length - 1);
+}

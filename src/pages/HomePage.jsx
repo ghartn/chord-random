@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import {
     generateProgression,
+    restoreProgression,
     generateMidi,
-    mapProgressionToKey
+    mapProgressionToKey,
+    getProgressionURL
 } from "../utils/chords";
 import Loader from "../components/Loader";
 import ProgressionDisplay from "../components/ProgressionDisplay";
@@ -22,7 +24,7 @@ class HomePage extends Component {
             progression: [],
             previousKey: "C",
             key: "C",
-            bpm: 120,
+            bpm: 150,
             playing: false,
             playingChord: {},
             chordPart: null,
@@ -32,6 +34,12 @@ class HomePage extends Component {
 
     componentDidMount() {
         this._randomizeColor();
+        if (this.props.match.params.progression) {
+            let progression = String(this.props.match.params.progression).split("-");
+            this.setState({
+                progression: restoreProgression(progression)
+            })
+        }
     }
 
     _randomizeColor = () => {
@@ -234,6 +242,7 @@ class HomePage extends Component {
             key: this.state.key,
             previousKey: previousKey
         });
+        this.props.history.push("/" + getProgressionURL(progression));
     };
 
     _renderChords = () => {

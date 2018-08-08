@@ -106,7 +106,7 @@ class HomePage extends Component {
     };
 
     _playProgression = () => {
-        Tone.Transport.start();
+        Tone.Transport.start("+0.1");
 
         if (this.state.playing) {
             this._cleanup();
@@ -128,8 +128,6 @@ class HomePage extends Component {
         new Tone.Event((time, x) => {
             this._cleanup();
         }).start(endTime);
-
-
 
         this.setState({
             playing: true

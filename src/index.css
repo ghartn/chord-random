@@ -5064,7 +5064,9 @@ select option {
 }
 
 svg.text-shadow,
-.text-shadow svg {
+.text-shadow svg,
+img.text-shadow,
+.text-shadow img {
   -webkit-filter: drop-shadow(2px 4px 4px rgba(0, 0, 0, .1));
           filter: drop-shadow(2px 4px 4px rgba(0, 0, 0, .1));
 }
@@ -5074,7 +5076,9 @@ svg.text-shadow,
 }
 
 svg.text-shadow-sm,
-.text-shadow-sm svg {
+.text-shadow-sm svg,
+img.text-shadow-sm,
+.text-shadow-sm img {
   -webkit-filter: drop-shadow(1px 2px 2px rgba(0, 0, 0, .1));
           filter: drop-shadow(1px 2px 2px rgba(0, 0, 0, .1));
 }

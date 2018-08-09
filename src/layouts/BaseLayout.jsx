@@ -1,19 +1,19 @@
 import React, { Component } from "react";
-//import { Link } from "react-router-dom"
-//import logo from "../img/logo.png"
+import { Link } from "react-router-dom";
+import logo from "../img/logo.png";
 
 class BasicLayout extends Component {
 	render() {
 		const { children } = this.props;
 		return (
 			<div className="min-h-screen flex flex-col antialiased leading-tight">
-				{/* <div className="flex flex-between h-16 px-6 items-center shadow">
-					<div className="flex items-center  w-32 py-2 h-full">
-						<Link to="/" className="no-underline">
-							<h1 className="text-primary text-lg">logo</h1>
+				<div className="hidden md:block absolute">
+					<div className="flex items-center p-8 lg:p-6 h-full">
+						<Link to="/" className="block no-underline">
+							<img className="text-shadow" src={logo} />
 						</Link>
 					</div>
-					<ul className="list-reset flex justify-end flex-1">
+					{/* <ul className="list-reset flex justify-end flex-1">
 						<li className="px-4">
 							<a href="#" className="no-underline text-primary hover:text-primary-dark">link 1</a>
 						</li>
@@ -23,8 +23,8 @@ class BasicLayout extends Component {
 						<li className="px-4">
 							<a href="#" className="no-underline text-primary hover:text-primary-dark">link 3</a>
 						</li>
-					</ul>
-				</div> */}
+					</ul> */}
+				</div>
 				{children}
 			</div>
 		);

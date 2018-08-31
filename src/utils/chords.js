@@ -1,7 +1,9 @@
 import { Chord, Scale, Distance, Note } from "tonal";
-import ChordTypes from "./ChordTypes"
+import ChordTypes from "./ChordTypes";
 import shortid from "shortid";
 import palette from "./palette";
+import intersection from "lodash/intersection";
+import pull from "lodash/pull";
 import * as MidiWriter from "midi-writer-js";
 
 const VOICING_THRESHOLD = 4;
@@ -21,13 +23,19 @@ export const generateProgression = (key, oldProgresion) => {
 		});
 	} else {
 		for (let i = 0; i < 4; i++) {
-			let newChord = generateChord(key, colors)
+			let newChord = generateChord(key, colors);
 			progression.push(newChord);
-			colors = colors.filter(color => color !== newChord.color)
-
+			colors = colors.filter(color => color !== newChord.color);
 		}
 	}
 
+	let voicedProgression = voiceProgression(
+		progression.map(chord => chord.name)
+	);
+	progression.forEach((chord, i) => {
+		chord.notes = voicedProgression[i];
+	});
+	console.log(progression.map(chord => chord.name));
 	return progression;
 };
 
@@ -43,8 +51,7 @@ const generateChord = (key, colors) => {
 	if (majorDegrees.includes(scaleIndex)) {
 		let types = ChordTypes.filter(x => x.major);
 		chordType = types[Math.floor(Math.random() * types.length)];
-	}
-	else if (minorDegrees.includes(scaleIndex)) {
+	} else if (minorDegrees.includes(scaleIndex)) {
 		let types = ChordTypes.filter(x => x.minor);
 		chordType = types[Math.floor(Math.random() * types.length)];
 	} else {
@@ -58,7 +65,6 @@ const generateChord = (key, colors) => {
 		root: scale[scaleIndex],
 		type: chordType,
 		name: scale[scaleIndex] + chordType,
-		notes: getChordNotes(scale[scaleIndex] + chordType),
 		lock: false,
 		playing: false,
 		color: colors[colorIndex]
@@ -70,13 +76,20 @@ export const mapProgressionToKey = (progression, oldKey, newKey) => {
 
 	let cleanedProgression = [];
 	progression.forEach(chord => {
-		let newChord = Object.assign({}, chord)
+		let newChord = Object.assign({}, chord);
 		let interval = Distance.interval(oldKey, newKey);
 		newChord.root = Distance.transpose(chord.root, interval);
 		newChord.name = newChord.root + newChord.type;
-		newChord.notes = getChordNotes(newChord.root + newChord.type);
 		cleanedProgression.push(newChord);
 	});
+
+	let voicedProgression = voiceProgression(
+		cleanedProgression.map(chord => chord.name)
+	);
+	cleanedProgression.forEach((chord, i) => {
+		chord.notes = voicedProgression[i];
+	});
+	console.log(progression);
 	return cleanedProgression;
 };
 
@@ -101,7 +114,8 @@ const voiceChord = chordNotes => {
 	notes.forEach((current, i) => {
 		let next = notes[i + 1];
 		if (next) {
-			let currentMidi = Note.midi(current + octave), nextMidi = Note.midi(next + octave);
+			let currentMidi = Note.midi(current + octave),
+				nextMidi = Note.midi(next + octave);
 			if (nextMidi < currentMidi) {
 				//we crossed an octave so increment
 				octave++;
@@ -113,28 +127,67 @@ const voiceChord = chordNotes => {
 	return voicing;
 };
 
-const isVoiced = notes => {
-	return notes.every((current, index) => {
-		let pass = false;
-		const previous = notes[index - 1];
-		const next = notes[index + 1];
-		if (previous && next) {
-			let distancePrevious = Math.abs(previous - current);
-			let distanceNext = Math.abs(next - current);
-			pass =
-				distancePrevious >= VOICING_THRESHOLD &&
-				distanceNext >= VOICING_THRESHOLD;
-		} else if (previous) {
-			let distancePrevious = Math.abs(previous - current);
-			pass = distancePrevious >= VOICING_THRESHOLD;
-		} else if (next) {
-			let distanceNext = Math.abs(next - current);
-			pass = distanceNext >= VOICING_THRESHOLD;
-		} else {
-			pass = true;
+const voiceProgression = progression => {
+	let progressionNotes = [];
+	let voicedProgression = [];
+	for (let currentChord of progression) {
+		progressionNotes.push(Chord.notes(currentChord));
+		//set up voicing
+		voicedProgression.push([]);
+	}
+	//ok first we add the bass note in octave 2, and top note in octave 5
+	for (let i in progressionNotes) {
+		let chordNotes = progressionNotes[i];
+		let rootNote = chordNotes[0];
+		let topNote = chordNotes[chordNotes.length - 1];
+		voicedProgression[i].push(rootNote + "2");
+		voicedProgression[i].push(topNote + "4");
+	}
+
+	//put notes that are common in the same octave
+	let notesInCommon = intersection(...progressionNotes);
+	if (notesInCommon.length > 0) {
+		for (let note of notesInCommon) {
+			//set a common voice for notes in common
+			let noteVoice = note + "3";
+			for (let i in voicedProgression) {
+				voicedProgression[i].push(noteVoice);
+				pull(progressionNotes[i], note);
+			}
 		}
-		return pass;
-	});
+	}
+	for (let i in progressionNotes) {
+		//remove the bass note, and pull the common note from the chordNotes
+		let chordNotes = progressionNotes[i];
+		let rootNote = chordNotes[0];
+		let topNote = chordNotes[chordNotes.length - 1];
+		pull(progressionNotes[i], rootNote);
+		pull(progressionNotes[i], topNote);
+	}
+
+	//ok, so common notes are voiced, now we voice everything else!
+	//set up an iterative sliding window of size 3,2,1
+	for (let windowSize = progression.length - 1; windowSize >= 1; windowSize--) {
+		let windowIterations = progression.length - windowSize + 1;
+		for (let i = 0; i < windowIterations; i++) {
+			let progressionSlice = progressionNotes.slice(i, i + windowSize);
+			let notesInCommon = intersection(...progressionSlice);
+			if (notesInCommon.length > 0) {
+				for (let note of notesInCommon) {
+					let octave = Math.random() > 0.4 ? 4 : 3;
+					let noteVoice = note + octave;
+					for (let chord of progressionSlice) {
+						let index = progressionNotes.findIndex(x => x === chord);
+						if (index !== -1) {
+							voicedProgression[index].push(noteVoice);
+							pull(progressionNotes[index], note);
+						}
+					}
+				}
+			}
+		}
+	}
+	return voicedProgression;
 };
 
 export const generateMidi = progression => {
@@ -159,7 +212,7 @@ export const generateMidi = progression => {
 	return write.dataUri();
 };
 
-export const restoreProgression = (progression) => {
+export const restoreProgression = progression => {
 	let colors = Object.keys(palette);
 
 	let newProgression = progression.map(chord => {
@@ -173,18 +226,25 @@ export const restoreProgression = (progression) => {
 			root: chordTokens[0],
 			type: chordTokens[1],
 			name: chordName,
-			notes: getChordNotes(chordName),
 			lock: false,
 			playing: false,
 			color: color
 		};
-	})
-	return newProgression;
-}
+	});
 
-export const getProgressionURL = (progression) => {
+	let voicedProgression = voiceProgression(
+		newProgression.map(chord => chord.name)
+	);
+	newProgression.forEach((chord, i) => {
+		chord.notes = voicedProgression[i];
+	});
+
+	return newProgression;
+};
+
+export const getProgressionURL = progression => {
 	let progressionURL = "";
-	progression.forEach(chord => progressionURL += chord.name + "-");
+	progression.forEach(chord => (progressionURL += chord.name + "-"));
 	progressionURL = progressionURL.replace(/\#/g, "sh");
 	return progressionURL.substring(0, progressionURL.length - 1);
-}
+};

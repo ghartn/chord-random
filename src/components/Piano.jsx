@@ -36,7 +36,6 @@ class Piano extends Component {
 				/>
 			);
 		});
-		console.log(piano);
 		return <ul className="hidden md:block piano list-reset w-full">{keys}</ul>;
 	};
 

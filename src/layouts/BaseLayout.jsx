@@ -10,7 +10,7 @@ class BasicLayout extends Component {
 				<div className="hidden md:block absolute">
 					<div className="flex items-center p-8 lg:p-6 h-full">
 						<Link to="/" className="block no-underline">
-							<img className="text-shadow" src={logo} />
+							<img className="text-shadow" src={logo} alt="lentra" />
 						</Link>
 					</div>
 					{/* <ul className="list-reset flex justify-end flex-1">

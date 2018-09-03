@@ -11,6 +11,7 @@ const VOICING_THRESHOLD = 4;
 export const generateProgression = (key, oldProgresion) => {
 	let progression = [...oldProgresion];
 	let colors = Object.keys(palette);
+
 	//check for locked chords
 	if (progression && progression.length > 0) {
 		progression.forEach((chord, index) => {
@@ -33,7 +34,9 @@ export const generateProgression = (key, oldProgresion) => {
 		progression.map(chord => chord.name)
 	);
 	progression.forEach((chord, i) => {
-		chord.notes = voicedProgression[i];
+		if (!chord.notes) {
+			chord.notes = voicedProgression[i];
+		}
 	});
 	console.log(progression.map(chord => chord.name));
 	return progression;
@@ -138,8 +141,8 @@ const voiceProgression = progression => {
 	//ok first we add the bass note in octave 2, and top note in octave 5
 	for (let i in progressionNotes) {
 		let chordNotes = progressionNotes[i];
-		let rootNote = chordNotes[0];
-		let topNote = chordNotes[chordNotes.length - 1];
+		let rootNote = String(Note.simplify(chordNotes[0]));
+		let topNote = String(Note.simplify(chordNotes[chordNotes.length - 1]));
 		voicedProgression[i].push(rootNote + "2");
 		voicedProgression[i].push(topNote + "4");
 	}
@@ -149,7 +152,7 @@ const voiceProgression = progression => {
 	if (notesInCommon.length > 0) {
 		for (let note of notesInCommon) {
 			//set a common voice for notes in common
-			let noteVoice = note + "3";
+			let noteVoice = String(Note.simplify(note)) + "3";
 			for (let i in voicedProgression) {
 				voicedProgression[i].push(noteVoice);
 				pull(progressionNotes[i], note);
@@ -175,7 +178,7 @@ const voiceProgression = progression => {
 			if (notesInCommon.length > 0) {
 				for (let note of notesInCommon) {
 					let octave = Math.random() > 0.4 ? 4 : 3;
-					let noteVoice = note + octave;
+					let noteVoice = String(Note.simplify(note)) + octave;
 					for (let chord of progressionSlice) {
 						let index = progressionNotes.findIndex(x => x === chord);
 						if (index !== -1) {

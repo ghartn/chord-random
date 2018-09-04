@@ -13,6 +13,8 @@ class Piano extends Component {
 		};
 	}
 	componentDidMount() {
+		Tone.Transport.start();
+		Tone.Master.mute = false;
 		this.polySynth = new Tone.PolySynth(10, Tone.Synth).toMaster();
 		this.polySynth.set({
 			"oscillator.type": "triangle",

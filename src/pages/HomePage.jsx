@@ -28,7 +28,8 @@ class HomePage extends Component {
 			playing: false,
 			playingChord: {},
 			chordPart: null,
-			stopEvent: null
+			stopEvent: null,
+			octave: 3
 		};
 	}
 
@@ -72,6 +73,10 @@ class HomePage extends Component {
 			previousKey,
 			key
 		});
+	};
+
+	_onKeyPress = e => {
+		console.log(e);
 	};
 
 	_toggleChordLock = chord => {
@@ -260,6 +265,7 @@ class HomePage extends Component {
 				className={`flex flex-col text-center p-4 md:p-12 shadow-lg bg-white rounded m-2 ${
 					this.state.generating ? "shake" : ""
 				}`}
+				onKeyPress={this._onKeyPress}
 			>
 				{progressionDisplay}
 				<div className="flex justify-between items-center mb-6">

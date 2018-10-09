@@ -12,7 +12,11 @@ import Piano from "../components/Piano";
 import { CSSTransition } from "react-transition-group";
 import { arrayMove } from "react-sortable-hoc";
 import keys from "../utils/keys";
-import Tone from "tone";
+import Transport from "Tone/core/Transport";
+import Master from "Tone/core/Master";
+import Synth from "Tone/instrument/Synth";
+import PolySynth from "Tone/instrument/PolySynth";
+import Event from "Tone/event/Event";
 import palette from "../utils/palette";
 
 class HomePage extends Component {
@@ -109,7 +113,7 @@ class HomePage extends Component {
 	};
 
 	_playProgression = () => {
-		Tone.Transport.start("+0.1");
+		Transport.start("+0.1");
 
 		if (this.state.playing) {
 			this._cleanup();
@@ -122,13 +126,13 @@ class HomePage extends Component {
 		for (let index in progressionInKey) {
 			let chord = progressionInKey[index];
 			let time = Number(index) === 0 ? "+0.1" : "+" + index + "m";
-			new Tone.Event((time, x) => {
+			new Event((time, x) => {
 				this._togglePlay(chord);
 			}).start(time);
 			endTime = "+" + (Number(index) + 1) + "m";
 		}
 
-		new Tone.Event((time, x) => {
+		new Event((time, x) => {
 			this._cleanup();
 		}).start(endTime);
 
@@ -138,10 +142,10 @@ class HomePage extends Component {
 	};
 
 	_playChord = chord => {
-		Tone.Transport.start();
+		Transport.start();
 
 		let chordNotes = chord.notes;
-		let polySynth = new Tone.PolySynth(10, Tone.Synth).toMaster();
+		let polySynth = new PolySynth(10, Synth).toMaster();
 		polySynth.set({
 			"oscillator.type": "triangle",
 			volume: -16,
@@ -154,11 +158,11 @@ class HomePage extends Component {
 			}
 		});
 
-		Tone.Master.mute = false;
+		Master.mute = false;
 
 		polySynth.triggerAttackRelease(chordNotes, "1m");
 
-		new Tone.Event((time, chord) => {
+		new Event((time, chord) => {
 			this._stopChord(chord);
 		}, chord).start("+1m");
 
@@ -202,9 +206,9 @@ class HomePage extends Component {
 		progression.forEach(chord => {
 			chord.playing = false;
 		});
-		Tone.Master.mute = true;
-		Tone.Transport.stop();
-		Tone.Transport.cancel(0);
+		Master.mute = true;
+		Transport.stop();
+		Transport.cancel(0);
 		this.setState({
 			progression,
 			playing: false,

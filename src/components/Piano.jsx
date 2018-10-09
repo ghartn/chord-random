@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { Note } from "tonal";
-import Tone from "tone";
+import Transport from "Tone/core/Transport";
+import Master from "Tone/core/Master";
+import Synth from "Tone/instrument/Synth";
+import PolySynth from "Tone/instrument/PolySynth";
 
 const MIN_OCTAVE = 2;
 const MAX_OCTAVE = 7;
@@ -13,9 +16,9 @@ class Piano extends Component {
 		};
 	}
 	componentDidMount() {
-		Tone.Transport.start();
-		Tone.Master.mute = false;
-		this.polySynth = new Tone.PolySynth(10, Tone.Synth).toMaster();
+		Transport.start();
+		Master.mute = false;
+		this.polySynth = new PolySynth(10, Synth).toMaster();
 		this.polySynth.set({
 			"oscillator.type": "triangle",
 			volume: -16,
@@ -122,6 +125,8 @@ class Piano extends Component {
 			case "x":
 				this._incrementOctave();
 				break;
+			default:
+				break;
 		}
 	};
 
@@ -192,6 +197,8 @@ class Piano extends Component {
 			case "l":
 				note = "D";
 				octave++;
+				break;
+			default:
 				break;
 		}
 		if (note && !repeat) {

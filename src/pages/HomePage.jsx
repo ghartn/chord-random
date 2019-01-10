@@ -39,11 +39,29 @@ class HomePage extends Component {
 
 	componentDidMount() {
 		this._randomizeColor();
+		this.polySynth = new PolySynth(10, Synth).toMaster();
+		this.polySynth.set({
+			"oscillator.type": "triangle",
+			volume: -16,
+			portamento: 0.1,
+			envelope: {
+				attack: 0.1,
+				decay: 1.2,
+				sustain: 0,
+				release: 0.8
+			}
+		});
 		if (this.props.match.params.progression) {
 			let progression = String(this.props.match.params.progression).split("-");
 			this.setState({
 				progression: restoreProgression(progression)
 			});
+		}
+	}
+
+	componentWillUnmount() {
+		if (this.polySynth) {
+			this.polySynth.dispose();
 		}
 	}
 
@@ -145,22 +163,13 @@ class HomePage extends Component {
 		Transport.start();
 
 		let chordNotes = chord.notes;
-		let polySynth = new PolySynth(10, Synth).toMaster();
-		polySynth.set({
-			"oscillator.type": "triangle",
-			volume: -16,
-			portamento: 0.1,
-			envelope: {
-				attack: 0.1,
-				decay: 1.2,
-				sustain: 0,
-				release: 0.8
-			}
-		});
+		let { polySynth } = this;
 
 		Master.mute = false;
 
-		polySynth.triggerAttackRelease(chordNotes, "1m");
+		if (polySynth) {
+			polySynth.triggerAttackRelease(chordNotes, "1m");
+		}
 
 		new Event((time, chord) => {
 			this._stopChord(chord);

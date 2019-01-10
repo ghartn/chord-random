@@ -116,7 +116,6 @@ class Piano extends Component {
 
 	_octaveHandler = e => {
 		let { key } = e;
-		let { octave } = this.state;
 		switch (key) {
 			//octave handlers
 			case "z":

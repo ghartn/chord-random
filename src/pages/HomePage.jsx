@@ -18,6 +18,7 @@ import Synth from "Tone/instrument/Synth";
 import PolySynth from "Tone/instrument/PolySynth";
 import Event from "Tone/event/Event";
 import palette from "../utils/palette";
+import { stringify } from "querystringify";
 
 class HomePage extends Component {
 	constructor() {
@@ -51,12 +52,18 @@ class HomePage extends Component {
 				release: 0.8
 			}
 		});
-		if (this.props.match.params.progression) {
-			let progression = String(this.props.match.params.progression).split("-");
-			this.setState({
-				progression: restoreProgression(progression)
-			});
-		}
+		let progression, key;
+		let { search } = this.props;
+
+		//handle query string
+		progression = search.progression
+			? restoreProgression(search.progression)
+			: this.state.progression;
+		key = search.key ? search.key : this.state.key;
+		this.setState({
+			progression,
+			key
+		});
 	}
 
 	componentWillUnmount() {
@@ -90,15 +97,14 @@ class HomePage extends Component {
 			previousKey,
 			key
 		);
-		this.setState({
-			progression,
-			previousKey,
-			key
-		});
-	};
-
-	_onKeyPress = e => {
-		console.log(e);
+		this.setState(
+			{
+				progression,
+				previousKey,
+				key
+			},
+			this._updateFilters
+		);
 	};
 
 	_toggleChordLock = chord => {
@@ -252,12 +258,27 @@ class HomePage extends Component {
 			this.state.key,
 			this.state.progression
 		);
-		this.setState({
-			progression,
-			key: this.state.key,
-			previousKey: previousKey
-		});
-		this.props.history.push("/" + getProgressionURL(progression));
+		this.setState(
+			{
+				progression,
+				key: this.state.key,
+				previousKey: previousKey
+			},
+			this._updateFilters
+		);
+	};
+
+	_updateFilters = () => {
+		let filter = {};
+		if (this.state.progression) {
+			filter.progression = getProgressionURL(this.state.progression);
+		}
+		if (this.state.key) {
+			filter.key = this.state.key;
+		}
+		this.props.history.push(
+			this.props.location.pathname + "?" + stringify(filter)
+		);
 	};
 
 	_renderChords = () => {

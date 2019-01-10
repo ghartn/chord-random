@@ -218,22 +218,24 @@ export const generateMidi = progression => {
 export const restoreProgression = progression => {
 	let colors = Object.keys(palette);
 
-	let newProgression = progression.map(chord => {
-		let chordName = chord.replace(/sh/g, "#");
-		let chordTokens = Chord.tokenize(chordName);
-		let colorIndex = Math.floor(Math.random() * colors.length);
-		let color = colors[colorIndex];
-		colors = colors.filter(x => x !== color);
-		return {
-			id: shortid.generate(),
-			root: chordTokens[0],
-			type: chordTokens[1],
-			name: chordName,
-			lock: false,
-			playing: false,
-			color: color
-		};
-	});
+	let newProgression = String(progression)
+		.split("-")
+		.map(chord => {
+			let chordName = chord.replace(/sh/g, "#");
+			let chordTokens = Chord.tokenize(chordName);
+			let colorIndex = Math.floor(Math.random() * colors.length);
+			let color = colors[colorIndex];
+			colors = colors.filter(x => x !== color);
+			return {
+				id: shortid.generate(),
+				root: chordTokens[0],
+				type: chordTokens[1],
+				name: chordName,
+				lock: false,
+				playing: false,
+				color: color
+			};
+		});
 
 	let voicedProgression = voiceProgression(
 		newProgression.map(chord => chord.name)
@@ -248,6 +250,6 @@ export const restoreProgression = progression => {
 export const getProgressionURL = progression => {
 	let progressionURL = "";
 	progression.forEach(chord => (progressionURL += chord.name + "-"));
-	progressionURL = progressionURL.replace(/\#/g, "sh");
+	progressionURL = progressionURL.replace(/#/g, "sh");
 	return progressionURL.substring(0, progressionURL.length - 1);
 };

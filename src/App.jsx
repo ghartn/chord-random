@@ -8,7 +8,7 @@ class App extends Component {
 		return (
 			<Router>
 				<Switch>
-					<BaseRoute path="/:progression?" component={HomePage} />
+					<BaseRoute path="/" component={HomePage} />
 				</Switch>
 			</Router>
 		);

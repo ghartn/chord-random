@@ -29,7 +29,7 @@ class HomePage extends Component {
 			progression: [],
 			previousKey: "C",
 			key: "C",
-			bpm: 150,
+			bpm: 200,
 			playing: false,
 			playingChord: {},
 			chordPart: null,
@@ -42,14 +42,13 @@ class HomePage extends Component {
 		this._randomizeColor();
 		this.polySynth = new PolySynth(10, Synth).toMaster();
 		this.polySynth.set({
-			"oscillator.type": "triangle",
+			"oscillator.type": "sine",
 			volume: -16,
-			portamento: 0.1,
 			envelope: {
 				attack: 0.1,
-				decay: 1.2,
+				decay: 4,
 				sustain: 0,
-				release: 0.8
+				release: 0.2
 			}
 		});
 		let progression, key;
